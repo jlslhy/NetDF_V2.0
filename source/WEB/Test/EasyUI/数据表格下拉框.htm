@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css">   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css">   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+</head>
+<body>
+ 
+<select id="cc" class="easyui-combogrid" name="dept" style="width:250px;"   
+        data-options="    
+            panelWidth:450,    
+            value:'006',    
+            idField:'code',    
+            textField:'name',    
+            url:'datagrid_data.json',    
+            columns:[[    
+                {field:'code',title:'Code',width:60},    
+                {field:'name',title:'Name',width:100},    
+                {field:'addr',title:'Address',width:120},    
+                {field:'col4',title:'Col41',width:100}    
+            ]]    
+        "></select> 
+
+<br />
+ 
+ <input id="Text1" name="dept" value="01" /> 
+ 
+ <input id="Text2" name="Text2" value="01" /> 
+
+<br />
+<a href="#" onclick="test();" >测试</a>
+
+
+<a href="#" onclick="test2();" >测试2</a>
+ 
+<script type="text/javascript">
+
+    $('#Text1').combogrid({
+        panelWidth: 450,
+        value: '006',
+
+        idField: 'Code',
+        textField: 'Name',
+        url: '../JSON/GridData.aspx?r=userdata',
+        columns: [[
+        { field: 'Code', title: 'Code', width: 60 },
+        { field: 'Name', title: 'Name', width: 100 },
+        { field: 'Address', title: 'Address', width: 120 },
+        
+    ]]
+    });
+
+
+    $('#Text2').combogrid({
+        panelWidth: 450,
+        value: '006',
+
+        idField: 'id',
+        textField: 'text',
+        url: '../JSON/GridData.aspx?r=GetTreeData2',
+        columns: [[
+        { field: 'id', title: 'id', width: 60 },
+        { field: 'text', title: 'text', width: 100 } 
+ 
+    ]]
+    });
+
+</script>
+ 
+<script type="text/javascript">
+    function test() {
+
+
+
+
+    }
+    function test2() {
+
+
+    }
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

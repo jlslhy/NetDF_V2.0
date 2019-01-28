@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+<link href="../../../Styles/css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+<script src="/js/JQPrototype.js" type="text/javascript"></script>
+</head>
+<body>
+  <div>
+        <!-- 导航标题 Start -->
+        <div   class="PageTitle"  >
+            系统管理 >> 数据字典 >> 添加键值
+        </div>
+        <!-- 导航标题 End -->
+        <div title="表单区">
+          <form id="Form1" name="Form1" action="" >
+            <!-- 隐藏字段域 Start -->
+            <input id="RecordIDHid" type="hidden" value="" />
+            <!-- 隐藏字段域 End -->
+             
+            <div title="body">
+                <table class="formtable" >
+                  <tr>  
+                    <th>分类编码：</th>
+					<td>
+                    <input class="easyui-combobox" 
+                    id="CategoryCode_ComboBox"
+                    name="CategoryCode_ComboBox"
+                    data-options="
+                    url:'/DataAccessCommon/GetData.ashx?m=GetJsonDataByCategoryCode&DataTable=DataDictionaryCategory&KeyField=CategoryName&ValueField=CategoryCode',
+                    valueField:'id',
+                    textField:'text',
+                    panelHeight:'auto'
+                    "></td>  
+                    <th>键名：</th>
+					<td>
+					<input id="DataKey_Ipt"  />  
+					</td>
+				  </tr>
+                  <tr>  
+                    <th>键值：</th>
+					<td>
+					<input id="DataValue_Ipt"  />  
+					</td>  
+                    <th>排序：</th>
+					<td>
+					<input  id="OrderNumber_NumberBox"  class="easyui-numberbox"   /> 
+                    </td>
+				  </tr>
+				</table>
+            </div>
+          </form>
+        </div>
+        <div title="操作区">
+        <a id="saveBtn" href="javascript:SaveData();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存</a>  
+        <a id="saveAndClearBtn" href="javascript:SaveData();ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存并清空</a>
+        <a id="clearBtn" href="javascript:ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="return confirm('真的要清空？');" >清空</a> 
+        <a id="backBtn" href="javascript:history.back();" class="easyui-linkbutton" data-options="iconCls:'icon-back'"  style="display:none;" >返回</a>
+        </div>
+
+   </div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+
+    /*************************  控件初始化 Start  ***************************/
+
+    /*
+    $('#DepartmentID_Ipt').combotree({
+    url: '/DataAccess/DepartmentTBL/GetData.ashx?m=GetAllJsonTreeData',
+    required: true
+    });
+    */
+
+
+    if (location.href.indexOf("&showbackbtn=true") > 0 || location.href.indexOf("?showbackbtn=true") > 0) {
+        $("#backBtn").show();
+        $("#saveAndClearBtn").hide();
+    }
+
+
+    /*************************  控件初始化 End  ***************************/
+
+
+</script>
+
+<script type="text/javascript">
+    /************************* 页面初始化与表单的数据绑定 Start ****************************/
+    function LoadDataAndFillForm() {
+
+        var ID = encodeURIComponent($("#RecordIDHid").val());
+        var dataStr = "ID=" + ID;
+        dataStr += "&m=GetJsonDataByID";
+        dataStr += "&Ver=" + new Date().getMilliseconds();
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/DataDictionaryTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+
+
+                if (JsonResult.IsSuccess) {
+
+                    // 成功
+                    var data = JsonResult.Data;
+                    if (data.ID == "0") {
+                        data.ID = "";
+                    }
+                    if (data) {
+
+                        $('#CategoryCode_ComboBox').combobox('setValue', data.CategoryCode);
+
+                        $("#DataKey_Ipt").val(data.DataKey);
+
+                        $("#DataValue_Ipt").val(data.DataValue);
+
+                        $("#OrderNumber_NumberBox").val(data.OrderNumber);
+
+                    } else {
+                        alert("对不起，没数据！");
+                    }
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+    if (UrlHasParam(window.location.href, "id")) {
+
+        $("#RecordIDHid").val(ReqStr(window.location.href, "id"));
+        LoadDataAndFillForm();
+    }
+    /************************* 页面初始化与表单的数据绑定 End ****************************/  
+</script>
+
+<script type="text/javascript">
+    /******************  数据有效性验证 Start ********************/
+    function Validate() {
+        /*
+        if (!$('#LoginID_Ipt').validatebox("isValid")) {
+        alert("请填写好用户登录ID。");
+        $('#LoginID_Ipt').focus();
+        return false;
+        }
+
+        if (!$('#RealName_Ipt').validatebox("isValid")) {
+        alert("请填写好用户姓名。");
+        $('#RealName_Ipt').focus();
+        return false;
+        }
+        */
+        return true;
+    }
+
+    /******************  数据有效性验证 End ********************/
+
+
+
+
+    /******************* 保存数据（添加或者修改） Start ******************/
+    function SaveData() {
+
+        if (!Validate()) {
+            return;
+        }
+
+        /***************  获取表单数据信息 Start  ******************/
+
+        var ID = escape($("#RecordIDHid").val()); // 注意：这里统一用ID这个命名
+
+
+
+        var CategoryCode = $('#CategoryCode_ComboBox').combobox('getValue');
+
+
+
+        var DataKey = escape($("#DataKey_Ipt").val());
+
+
+
+        var DataValue = escape($("#DataValue_Ipt").val());
+
+
+
+        var OrderNumber = escape($("#OrderNumber_NumberBox").val());
+
+
+        var dataStr = "ID=" + ID;
+
+        dataStr += "&CategoryCode=" + CategoryCode;
+
+        dataStr += "&DataKey=" + DataKey;
+
+        dataStr += "&DataValue=" + DataValue;
+
+        dataStr += "&OrderNumber=" + OrderNumber;
+
+
+        /***************  获取表单数据信息 End  ******************/
+
+        /********************  向服务器端请求 Start  ************************/
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/DataDictionaryTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+                    alert(JsonResult.ReturnMessage);
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+        /********************  向服务器端请求 End  ************************/
+
+    }
+
+    /******************* 保存数据（添加或者修改） End ******************/
+
+    // 重置表单数据
+    function ClearForm() {
+        $("#Form1")[0].reset();
+    }
+
+</script>

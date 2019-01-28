@@ -1,0 +1,11 @@
+H:\WebSite\课件网\KJGX\source\DBControl\bin\Release\DBControl.dll
+H:\WebSite\课件网\KJGX\source\DBControl\bin\Release\DBControl.pdb
+H:\WebSite\课件网\KJGX\source\DBControl\bin\Release\DBUtility.dll
+H:\WebSite\课件网\KJGX\source\DBControl\bin\Release\Model.dll
+H:\WebSite\课件网\KJGX\source\DBControl\bin\Release\SystemExtend.dll
+H:\WebSite\课件网\KJGX\source\DBControl\bin\Release\DBUtility.pdb
+H:\WebSite\课件网\KJGX\source\DBControl\bin\Release\Model.pdb
+H:\WebSite\课件网\KJGX\source\DBControl\bin\Release\SystemExtend.pdb
+H:\WebSite\课件网\KJGX\source\DBControl\obj\Release\DBControl.csprojResolveAssemblyReference.cache
+H:\WebSite\课件网\KJGX\source\DBControl\obj\Release\DBControl.dll
+H:\WebSite\课件网\KJGX\source\DBControl\obj\Release\DBControl.pdb

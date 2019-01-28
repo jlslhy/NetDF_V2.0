@@ -1,0 +1,4 @@
+H:\WebSite\课件网\KJGX\source\DBUtility\bin\Release\DBUtility.dll
+H:\WebSite\课件网\KJGX\source\DBUtility\bin\Release\DBUtility.pdb
+H:\WebSite\课件网\KJGX\source\DBUtility\obj\Release\DBUtility.dll
+H:\WebSite\课件网\KJGX\source\DBUtility\obj\Release\DBUtility.pdb

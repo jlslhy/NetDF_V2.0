@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>NetDF系统框架   技术支持：软艺软件[www.ruanyi.online]</title>
+	<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css">
+ 
+	<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script>
+
+
+    <script type="text/javascript">
+        function addTab(title, url) {
+            if ($('#tabs').tabs('exists', title)) {
+                $('#tabs').tabs('select', title); //选中并刷新
+                var currTab = $('#tabs').tabs('getSelected');
+                var url = $(currTab.panel('options').content).attr('src');
+                if (url != undefined && currTab.panel('options').title != 'Home') {
+                    $('#tabs').tabs('update', {
+                        tab: currTab,
+                        options: {
+                            content: createFrame(url)
+                        }
+                    })
+                }
+            } else {
+                var content = createFrame(url);
+                $('#tabs').tabs('add', {
+                    title: title,
+                    content: content,
+                    closable: true
+                });
+            }
+            tabClose();
+        }
+        function createFrame(url) {
+            var s = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+            return s;
+        }
+
+        function tabClose() {
+            /*双击关闭TAB选项卡*/
+            $(".tabs-inner").dblclick(function () {
+                var subtitle = $(this).children(".tabs-closable").text();
+                $('#tabs').tabs('close', subtitle);
+            })
+            /*为选项卡绑定右键*/
+            $(".tabs-inner").bind('contextmenu', function (e) {
+                $('#mm').menu('show', {
+                    left: e.pageX,
+                    top: e.pageY
+                });
+
+                var subtitle = $(this).children(".tabs-closable").text();
+
+                $('#mm').data("currtab", subtitle);
+                $('#tabs').tabs('select', subtitle);
+                return false;
+            });
+        }
+        //绑定右键菜单事件
+        function tabCloseEven() {
+            //刷新
+            $('#mm-tabupdate').click(function () {
+                var currTab = $('#tabs').tabs('getSelected');
+                var url = $(currTab.panel('options').content).attr('src');
+                if (url != undefined && currTab.panel('options').title != 'Home') {
+                    $('#tabs').tabs('update', {
+                        tab: currTab,
+                        options: {
+                            content: createFrame(url)
+                        }
+                    })
+                }
+            })
+            //关闭当前
+            $('#mm-tabclose').click(function () {
+                var currtab_title = $('#mm').data("currtab");
+                $('#tabs').tabs('close', currtab_title);
+            })
+            //全部关闭
+            $('#mm-tabcloseall').click(function () {
+                $('.tabs-inner span').each(function (i, n) {
+                    var t = $(n).text();
+                    if (t != 'Home') {
+                        $('#tabs').tabs('close', t);
+                    }
+                });
+            });
+            //关闭除当前之外的TAB
+            $('#mm-tabcloseother').click(function () {
+                var prevall = $('.tabs-selected').prevAll();
+                var nextall = $('.tabs-selected').nextAll();
+                if (prevall.length > 0) {
+                    prevall.each(function (i, n) {
+                        var t = $('a:eq(0) span', $(n)).text();
+                        if (t != 'Home') {
+                            $('#tabs').tabs('close', t);
+                        }
+                    });
+                }
+                if (nextall.length > 0) {
+                    nextall.each(function (i, n) {
+                        var t = $('a:eq(0) span', $(n)).text();
+                        if (t != 'Home') {
+                            $('#tabs').tabs('close', t);
+                        }
+                    });
+                }
+                return false;
+            });
+            //关闭当前右侧的TAB
+            $('#mm-tabcloseright').click(function () {
+                var nextall = $('.tabs-selected').nextAll();
+                if (nextall.length == 0) {
+                    //msgShow('系统提示','后边没有啦~~','error');
+                    alert('后边没有啦~~');
+                    return false;
+                }
+                nextall.each(function (i, n) {
+                    var t = $('a:eq(0) span', $(n)).text();
+                    $('#tabs').tabs('close', t);
+                });
+                return false;
+            });
+            //关闭当前左侧的TAB
+            $('#mm-tabcloseleft').click(function () {
+                var prevall = $('.tabs-selected').prevAll();
+                if (prevall.length == 0) {
+                    alert('到头了，前边没有啦~~');
+                    return false;
+                }
+                prevall.each(function (i, n) {
+                    var t = $('a:eq(0) span', $(n)).text();
+                    $('#tabs').tabs('close', t);
+                });
+                return false;
+            });
+
+            //退出
+            $("#mm-exit").click(function () {
+                $('#mm').menu('hide');
+            })
+        }
+
+        $(function () {
+            tabCloseEven();
+
+            $('.cs-navi-tab').click(function () {
+                var $this = $(this);
+                var href = $this.attr('src');
+                var title = $this.text();
+                addTab(title, href);
+            });
+
+            var themes = {
+                'gray': 'themes/gray/easyui.css',
+                'black': 'themes/black/easyui.css',
+                'bootstrap': 'themes/bootstrap/easyui.css',
+                'default': 'themes/default/easyui.css',
+                'metro': 'themes/metro/easyui.css',
+                'pepper-grinder': 'themes/pepper-grinder/easyui.css',
+                'blue': 'themes/default/easyui.css',
+                'cupertino': 'themes/cupertino/easyui.css',
+                'dark-hive': 'themes/dark-hive/easyui.css',
+                'sunny': 'themes/sunny/easyui.css'
+            };
+
+            var skins = $('.li-skinitem span').click(function () {
+                var $this = $(this);
+                if ($this.hasClass('cs-skin-on')) return;
+                skins.removeClass('cs-skin-on');
+                $this.addClass('cs-skin-on');
+                var skin = $this.attr('rel');
+                $('#swicth-style').attr('href', themes[skin]);
+                setCookie('cs-skin', skin);
+                skin == 'dark-hive' ? $('.cs-north-logo').css('color', '#FFFFFF') : $('.cs-north-logo').css('color', '#000000');
+            });
+
+            if (getCookie('cs-skin')) {
+                var skin = getCookie('cs-skin');
+                $('#swicth-style').attr('href', themes[skin]);
+                $this = $('.li-skinitem span[rel=' + skin + ']');
+                $this.addClass('cs-skin-on');
+                skin == 'dark-hive' ? $('.cs-north-logo').css('color', '#FFFFFF') : $('.cs-north-logo').css('color', '#000000');
+            }
+        });
+
+
+        function setCookie(name, value) {//两个参数，一个是cookie的名子，一个是值
+            var Days = 30; //此 cookie 将被保存 30 天
+            var exp = new Date();    //new Date("December 31, 9998");
+            exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+            document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+        }
+
+        function getCookie(name) {//取cookies函数        
+            var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+            if (arr != null) return unescape(arr[2]); return null;
+        }
+</script>
+
+
+</head>
+<body  topmargin="3" rightmargin="3" bottommargin="3" leftmargin="3" >
+	 
+	 
+	<div  id="DivMain"  class="easyui-layout" style="width:100%;height:562px;">
+		<div data-options="region:'north'"  style="height:50px; background-color:#F4F8FF;">
+        <div style="float:left;" ><img src="../images/logo.png" height="50" /></div>
+        <div style="float:right; height:50px;" >
+        <label id="lblCurrentUserInfo">
+        </label>
+        <a href="javascript:UserLogout();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'">退出</a>
+        </div>
+        </div>
+		<div data-options="region:'south',split:true" title="系统提示区 &nbsp;&nbsp;&nbsp;&nbsp; 框架技术支持：软艺软件[www.ruanyi.online]" style="height:80px;"></div>
+		<div data-options="region:'east',split:true" title="帮助区" style="width:180px;">
+			<ul class="easyui-tree" data-options="url:'tree_data1.json',animate:true,dnd:true"></ul>
+		</div>
+		<div data-options="region:'west',split:true" title="菜单栏" style="width:180px;">
+			<div class="easyui-accordion" data-options="fit:true,border:false">
+				<div title="我的工作"  data-options="selected:true"  style="padding:10px;">
+					<ul class="easyui-tree">
+                    
+                    </ul>
+				</div>
+                <div title="客户管理"  data-options="selected:true"  style="padding:10px;">
+					<ul class="easyui-tree">
+                       <li><a href="javascript:void(0);" src="../MyWork/Customer/CustomerOperate.htm" class="cs-navi-tab">添加客户</a></li>
+                       <li><a href="javascript:void(0);" src="../MyWork/Customer/CustomerList.htm" class="cs-navi-tab">客户列表</a></li>
+                       <li><a href="javascript:void(0);" src="../MyWork/CustomerDocumentary/CustomerDocumentaryOperate.htm" class="cs-navi-tab">添加跟单</a></li>
+                       <li><a href="javascript:void(0);" src="../MyWork/CustomerDocumentary/CustomerDocumentaryList.htm" class="cs-navi-tab">跟单列表</a></li>
+                       <li><a href="javascript:void(0);" src="../MyWork/CustomerContact/CustomerContactList.htm" class="cs-navi-tab">联系人列表</a></li>
+
+	                </ul>
+				</div>
+                <div title="综合行政"  data-options="selected:true"  style="padding:10px;">
+					<ul class="easyui-tree">
+                       <li>
+					       <span>办公用品</span>
+					       <ul>
+                             <li><a href="javascript:void(0);" src="../MyWork/OfficeSupplies/OfficeSuppliesOperate.htm" class="cs-navi-tab">添加物品</a></li>
+						     <li><a href="javascript:void(0);" src="../MyWork/OfficeSupplies/OfficeSuppliesList.htm" class="cs-navi-tab">物品列表</a></li>
+						   </ul>
+				        </li>
+	                </ul>
+				</div>
+                <div title="流程设计" style="padding:10px">
+                   <ul class="easyui-tree">
+
+                        <li>
+					       <span>流程管理</span>
+					       <ul>
+                             <li><a href="javascript:void(0);" src="../MyWork/WF_WorkFlow/WF_WorkFlowOperate.htm" class="cs-navi-tab">添加流程</a></li>
+						     <li><a href="javascript:void(0);" src="../MyWork/WF_WorkFlow/WF_WorkFlowList.htm" class="cs-navi-tab">流程列表</a></li>
+						   </ul>
+				        </li>
+                        <li>
+					       <span>流程节点管理</span>
+					       <ul>
+                             <li><a href="javascript:void(0);" src="../MyWork/WF_Node/WF_NodeOperate.htm" class="cs-navi-tab">添加流程节点</a></li>
+						     <li><a href="javascript:void(0);" src="../MyWork/WF_Node/WF_NodeList.htm" class="cs-navi-tab">流程节点列表</a></li>
+						   </ul>
+				        </li>
+                         
+	                </ul>
+				</div>
+				  
+				<div title="系统管理" style="padding:10px">
+                   <ul class="easyui-tree">
+
+                        <li>
+					       <span>组织架构</span>
+					       <ul>
+                             <li><a href="javascript:void(0);" src="../SystemManage/Department/DepartmentOperate.htm" class="cs-navi-tab">添加部门</a></li>
+						     <li><a href="javascript:void(0);" src="../SystemManage/Department/DepartmentList.htm" class="cs-navi-tab">部门管理</a></li>
+						     <li>
+                               <span>用户管理</span>
+                               <ul>
+                                 <li><a href="javascript:void(0);" src="../SystemManage/Users/UsersOperate.htm" class="cs-navi-tab">添加用户</a></li>
+                                 <li><a href="javascript:void(0);" src="../SystemManage/Users/UsersList.htm" class="cs-navi-tab">用户列表</a></li>
+                                 <li><a href="javascript:void(0);" src="../SystemManage/Users/UpdatePass.htm" class="cs-navi-tab">修改密码</a></li>
+                               </ul>
+                             </li>
+						   </ul>
+				        </li>
+
+                        <li>
+					       <span>角色权限</span>
+					       <ul>
+                             <li><a href="javascript:void(0);" src="../SystemManage/SystemRole/SystemRoleOperate.htm" class="cs-navi-tab">添加角色</a></li>
+						     <li><a href="javascript:void(0);" src="../SystemManage/SystemRole/SystemRoleList.htm" class="cs-navi-tab">角色管理</a></li>
+						     
+						   </ul>
+				        </li>
+
+                        <li>
+					       <span>数据字典</span>
+					       <ul>
+						     <li><a href="javascript:void(0);" src="../SystemManage/DataDictionaryCategory/DataDictionaryCategoryOperate.htm" class="cs-navi-tab">添加分类</a></li>
+						     <li><a href="javascript:void(0);" src="../SystemManage/DataDictionaryCategory/DataDictionaryCategoryList.htm" class="cs-navi-tab">分类列表</a></li>
+						  
+						     <li><a href="javascript:void(0);" src="../SystemManage/DataDictionary/DataDictionaryOperate.htm" class="cs-navi-tab">添加键值</a></li>
+						     <li><a href="javascript:void(0);" src="../SystemManage/DataDictionary/DataDictionaryList.htm" class="cs-navi-tab">键值列表</a></li>
+						   </ul>
+				        </li>
+                       <!-- 
+		                <li>
+                            <span>日志管理</span>
+			                <ul>
+                                <li>系统日志</li>
+				                <li>异常日志</li>
+                                <li>操作日志</li>
+                                <li>登录日志</li>
+
+			                </ul>
+		                </li>
+                        -->
+                       <li>
+                            <span>附件管理</span>
+			                <ul>
+                                <li><a href="javascript:void(0);" src="../SystemManage/Attachment/AttachmentList.htm" class="cs-navi-tab">附件列表</a></li>
+				                 
+			                </ul>
+		                </li>
+
+                       <li>
+                            <span>系统配置管理</span>
+			                <ul>
+                                <li><a href="javascript:void(0);" src="../SystemManage/SystemSetup/SystemSetupOperate.htm" class="cs-navi-tab">添加配置</a></li>
+				                <li><a href="javascript:void(0);" src="../SystemManage/SystemSetup/SystemSetupList.htm" class="cs-navi-tab">配置列表</a></li>
+			                </ul>
+		                </li>
+
+
+
+	                </ul>
+				</div>
+			
+            
+            </div>
+		</div>
+		<div  data-options="region:'center',title:'主要工作区',iconCls:'icon-ok'">
+			<div  id="tabs"  class="easyui-tabs" data-options="fit:true,border:false,plain:true">
+				<div title="桌面" data-options="href:'desc.htm'" style="padding:10px"></div>
+				
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+    function GetLoginInfo() {
+
+        $.getJSON("/Module/LoginManage/GetLoginInfo.ashx",
+        {
+            m: "GetUserInfo"
+        }
+        , function (json) {
+            if (json.IsSuccess == false) {
+                alert(json.ReturnMessage);
+                location.href = "Login.aspx";
+            } else {
+$("#lblCurrentUserInfo").html("当前用户："+json.LoginID);
+            }
+        });
+    }
+
+    function UserLogout() {
+
+        $.getJSON("/Module/LoginManage/Logout.ashx",
+        {
+            m: "UserLogout"
+        }
+        , function (json) {
+            if (json.IsSuccess == true) {
+                alert(json.ReturnMessage);
+            }
+            location.href = "Login.aspx";
+        });
+    }
+
+</script>
+<script type="text/javascript">
+    //$("#DivMain").height($(document).height());
+    $("#DivMain").height($(window).height());
+    GetLoginInfo();
+</script>

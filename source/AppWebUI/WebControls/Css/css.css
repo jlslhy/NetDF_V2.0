@@ -1,0 +1,10 @@
+﻿#PageControlDiv{ }
+#PageControlUl{list-style-position:inside;}
+#PageControlUl li{ float:left; padding:4px; margin:2px; line-height:18px; border:1px solid #B6B7BC;   text-align:center;} 
+#PageControlUl li a{ text-decoration:none;}
+#PageControlGoToUl{ list-style-type:none; list-style-position:inside; line-height:28px;}
+#PageControlGoToUl input {  width:36px; line-height:28px; height:28px; border:1px solid #B6B7BC }
+#pagenumberIpt{ }
+#div_GoToPage{ }
+ 
+ 

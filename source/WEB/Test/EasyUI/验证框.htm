@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css">   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css">   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+</head>
+<body>
+  
+ <input id="vv" class="easyui-validatebox" data-options="required:true,validType:'email'" /> 
+ <br />
+
+ <input id="Text1" /> 
+
+<br />
+
+
+<input id="pwd" name="pwd" type="password" class="easyui-validatebox" data-options="required:true,missingMessage:'dddddddd',delay:300" />   
+<input id="rpwd" name="rpwd" type="password" class="easyui-validatebox"     
+    required="required" validType="equals['#pwd']" />  
+
+    <br />
+
+    <input class="easyui-validatebox" data-options="validType:'minLength[5]',invalidMessage:'wwwwwwwwW',tipPosition:'right'">  
+
+    <br />
+
+    <input class="easyui-validatebox" data-options="missingMessage:'ddd'"> 
+
+
+<br />
+<a href="#" onclick="test();" >测试</a>
+
+
+<a href="#" onclick="test2();" >测试2</a>
+ 
+<script type="text/javascript">
+    $('#Text1').validatebox({
+        required: true,
+        validType: 'email'
+    });
+
+
+
+
+    // extend the 'equals' rule    
+    $.extend($.fn.validatebox.defaults.rules, {
+        equals: {
+            validator: function (value, param) {
+                return value == $(param[0]).val();
+            },
+            message: 'Field do not match.'
+        }
+    });
+
+
+    $.extend($.fn.validatebox.defaults.rules, {
+        minLength: {
+            validator: function (value, param) {
+                return value.length >= param[0];
+            },
+            message: 'Please enter at least {0}  characters.'
+        }
+    }); 
+ 
+</script>
+ 
+<script type="text/javascript">
+    function test() {
+
+
+
+
+    }
+    function test2() {
+
+
+    }
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

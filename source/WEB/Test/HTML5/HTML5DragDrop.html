@@ -1,0 +1,36 @@
+﻿<html>
+<head>
+<title>HTML5拖拽</title>
+<meta charset="utf-8">
+<style>
+#div1 {width:350px;height:70px;padding:10px;border:1px solid #aaaaaa;}
+</style>
+</head>
+<body>
+<p>拖动img_w3slogo.gif图片到矩形框中:</p>
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<br>
+<img id="drag1" src="/h5_images/logo3.png" draggable="true" ondragstart="drag(event)" width="300" height="56">
+<div id="drag2" draggable="true" ondragstart="drag(event)"  style="width:300px; height:60px; background-color:blue;">ccccccccccccccc</div>
+
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        
+        ev.dataTransfer.setData("Text", ev.target.id);
+
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var data = ev.dataTransfer.getData("Text");
+        ev.target.appendChild(document.getElementById(data));
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+        <link href="../../UIFramkwork/ext-2.0.2/resources/css/ext-all.css" rel="stylesheet"
+        type="text/css" />
+    <script src="../../UIFramkwork/ext-2.0.2/adapter/ext/ext-base.js" type="text/javascript"></script>
+    <script src="../../UIFramkwork/ext-2.0.2/ext-all.js" type="text/javascript"></script>
+     <style type="text/css">
+       
+    </style>
+</head>
+<body>
+<div id="a1">dddd</div>
+</body>
+<script type="text/javascript">
+    Ext.onReady(function () {
+        Ext.get("a1").applyStyles({
+            position: "absolute"
+            , top: 10
+            , left: 200
+            , backgroundColor: "red"
+            , width: 100
+            , height: 100
+        }).ghost(
+            'b',
+        {
+            easing:'easeOut',
+            duration: .5,
+            remove: false,
+            useDisplay:false
+        });
+
+
+    })
+
+
+    
+
+    </script>
+      
+</html>

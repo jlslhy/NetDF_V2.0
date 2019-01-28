@@ -1,0 +1,580 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+<link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+<script type="text/javascript" src="/js/JQPrototype.js"></script>
+<script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+  <div>
+        <!-- 导航标题 Start -->
+        <div   class="PageTitle"  >
+            客户管理 >> 添加联系人 >> <label id="PageTitleLabel" style=" color:green; font-weight:bold;">添加记录</label>
+        </div>
+		
+        <div class="PageSubTitle"  >
+            <label id="PageSubTitleLabel" style=" color:green; font-weight:bold;"></label><input id="PCodeHid" type="hidden" value="" />
+        </div>
+		
+        <!-- 导航标题 End -->
+        <div title="表单区">
+          <form id="Form1" name="Form1" action="" >
+            <!-- 隐藏字段域 Start -->
+            <input id="RecordIDHid" type="hidden" value="" />
+            <!-- 隐藏字段域 End -->
+             
+            <div title="body">
+                <table class="formtable" >
+                  <tr>  
+                    <th>是否主联系人：</th>
+                    <td> 
+                    <input id="IsMainContact_CheckBox"  type="checkbox" /> 
+                    
+                    </td>  
+                    <th>姓名：</th>
+                    <td>
+                    <input id="Name_Input" name="Name_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>客户编码：</th>
+                    <td>
+                    <input id="CustomerCode_NumberBox"  class="easyui-numberbox" style="border:0px; width:0px;"  data-options=""     /><label id="CustomerCode_Lbl"  ></label> <a href="javascript:ShowIFrameBox('选择流程', '../Customer/CustomerListSelect.htm?OpenType=iframe&RtnValueObj=CustomerCode_NumberBox&RtnHtmlObj=CustomerCode_Lbl&TextField=CustomerName&ValueField=CustomerCode&SelectType=SingleSelect', 800, 480, 10);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" >选择</a>
+                    </td>  
+                    <th>职务：</th>
+                    <td>
+                    <input id="Position_Input" name="Position_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>电子邮箱：</th>
+                    <td>
+                    <input id="Email_Input" name="Email_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>手机：</th>
+                    <td>
+                    <input id="MobilePhone_Input" name="MobilePhone_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>项目角色：</th>
+                    <td>
+                    <input id="ProjectRoles_Input" name="ProjectRoles_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>QQ：</th>
+                    <td>
+                    <input id="QQ_Input" name="QQ_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>备注：</th>
+                    <td>
+                    <input id="Remark_Input" name="Remark_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>部门：</th>
+                    <td>
+                    <input id="Department_Input" name="Department_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>微博：</th>
+                    <td>
+                    <input id="MicroBlog_Input" name="MicroBlog_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>微信：</th>
+                    <td>
+                    <input id="WeChat_Input" name="WeChat_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>籍贯：</th>
+                    <td>
+                    <input id="NativePlace_Input" name="NativePlace_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>毕业学校：</th>
+                    <td>
+                    <input id="GraduateSchool_Input" name="GraduateSchool_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>性别：</th>
+                    <td>
+                    <input id="Sex_Input" name="Sex_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>出生日期：</th>
+                    <td>
+                    <input id="Birthdate_DateBox"  class="easyui-datebox"  />
+					
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>爱人工作单位：</th>
+                    <td>
+                    <input id="LoverWorkUnit_Input" name="LoverWorkUnit_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>之前的工作单位：</th>
+                    <td>
+                    <input id="PreviousWorkUnits_Input" name="PreviousWorkUnits_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>婚否：</th>
+                    <td> 
+                    <input id="MaritalStatus_CheckBox"  type="checkbox" /> 
+                    
+                    </td>  
+                    <th>是否有小孩：</th>
+                    <td> 
+                    <input id="HaveAnyChildren_CheckBox"  type="checkbox" /> 
+                    
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>家庭地址：</th>
+                    <td>
+                    <input id="HomeAddress_Input" name="HomeAddress_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                </table>
+            </div>
+          </form>
+        </div>
+        <div title="操作区">
+        <a id="saveBtn" href="javascript:Save();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存</a>  
+        <a id="saveAndClearBtn" href="javascript:SaveDataAndClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存并清空</a>
+        <a id="clearBtn" href="javascript:ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="return confirm('真的要清空？');" >清空</a> 
+        <a id="backBtn" href="javascript:history.back();" class="easyui-linkbutton" data-options="iconCls:'icon-back'"  style="display:none;" >返回</a>
+        </div>
+
+   </div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+    // 检测是否在线
+    CheckUpLoginState();
+    /*************************  控件初始化 Start  ***************************/
+ 
+    if (location.href.indexOf("&showbackbtn=true") > 0 || location.href.indexOf("?showbackbtn=true") > 0) {
+        $("#backBtn").show();
+        $("#saveAndClearBtn").hide();
+    }
+    
+
+	
+    /*************************  控件初始化 End  ***************************/
+	
+</script>
+
+<script type="text/javascript">
+    /************************* 页面初始化与表单的数据绑定 Start ****************************/
+    function LoadDataAndFillForm() {
+
+        var ID = encodeURIComponent($("#RecordIDHid").val());
+        var dataStr = "ID=" + ID;
+        dataStr += "&m=GetJsonDataByID";
+        dataStr += "&Ver=" + new Date().getMilliseconds();
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/CustomerContactTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+
+
+                if (JsonResult.IsSuccess) {
+
+                    // 成功
+                    var data = JsonResult.Data;
+                    if (data.ID == "0") {
+                        data.ID = "";
+                    }
+                    if (data) {
+						 
+						if (data.IsMainContact == "True") {
+                            $("#IsMainContact_CheckBox").attr("checked", "checked");
+                        }else {
+                            $("#IsMainContact_CheckBox").removeAttr("checked");
+                        }  
+						
+                        $("#Name_Input").val(data.Name);
+						
+                        $("#CustomerCode_NumberBox").val(data.CustomerCode);
+						
+                        $("#Position_Input").val(data.Position);
+						
+                        $("#Email_Input").val(data.Email);
+						
+                        $("#MobilePhone_Input").val(data.MobilePhone);
+						
+                        $("#ProjectRoles_Input").val(data.ProjectRoles);
+						
+                        $("#QQ_Input").val(data.QQ);
+						
+                        $("#Remark_Input").val(data.Remark);
+						
+                        $("#Department_Input").val(data.Department);
+						
+                        $("#MicroBlog_Input").val(data.MicroBlog);
+						
+                        $("#WeChat_Input").val(data.WeChat);
+						
+                        $("#NativePlace_Input").val(data.NativePlace);
+						
+                        $("#GraduateSchool_Input").val(data.GraduateSchool);
+						
+                        $("#Sex_Input").val(data.Sex);
+						
+                        $("#Birthdate_DateBox").datebox('setValue',new Date(data.Birthdate.replace(/-/g, "/")).getFullYear() + "-" + (new Date(data.Birthdate.replace(/-/g, "/")).getMonth() + 1) + "-" + new Date(data.Birthdate.replace(/-/g, "/")).getDate());
+						
+                        $("#LoverWorkUnit_Input").val(data.LoverWorkUnit);
+						
+                        $("#PreviousWorkUnits_Input").val(data.PreviousWorkUnits);
+						 
+						if (data.MaritalStatus == "True") {
+                            $("#MaritalStatus_CheckBox").attr("checked", "checked");
+                        }else {
+                            $("#MaritalStatus_CheckBox").removeAttr("checked");
+                        }  
+						 
+						if (data.HaveAnyChildren == "True") {
+                            $("#HaveAnyChildren_CheckBox").attr("checked", "checked");
+                        }else {
+                            $("#HaveAnyChildren_CheckBox").removeAttr("checked");
+                        }  
+						
+                        $("#HomeAddress_Input").val(data.HomeAddress);
+						
+                    } else {
+                        alert("对不起，没数据！");
+                    }
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+
+	
+                    function CustomerCodeToText() {
+                        var JsonResult = GetKeyValueJsonDataByDataTable("Customer", "CustomerName", "CustomerCode", true, $("#CustomerCode_NumberBox").val());
+                        if (JsonResult.IsSuccess && JsonResult.rows.length == 1) {
+                            $("#CustomerCode_Lbl").html(JsonResult.rows[0]["DataKey"]);
+                        }
+                    }
+    /************************* 页面初始化与表单的数据绑定 End ****************************/  
+</script>
+
+<script type="text/javascript">
+    /******************  数据有效性验证 Start ********************/
+    function Validate() {
+	
+        if (!$('#Name_Input').validatebox("isValid"))
+        {
+           alert("姓名填写的数据没通过验证。");
+           $('#Name_Input').focus();
+           return false;
+        }
+        if (!$('#CustomerCode_NumberBox').numberbox("isValid"))
+        {
+           alert("客户编码填写的数据没通过验证。");
+           $('#CustomerCode_NumberBox').focus();
+           return false;
+        }
+        if (!$('#Position_Input').validatebox("isValid"))
+        {
+           alert("职务填写的数据没通过验证。");
+           $('#Position_Input').focus();
+           return false;
+        }
+        if (!$('#Email_Input').validatebox("isValid"))
+        {
+           alert("电子邮箱填写的数据没通过验证。");
+           $('#Email_Input').focus();
+           return false;
+        }
+        if (!$('#MobilePhone_Input').validatebox("isValid"))
+        {
+           alert("手机填写的数据没通过验证。");
+           $('#MobilePhone_Input').focus();
+           return false;
+        }
+        if (!$('#ProjectRoles_Input').validatebox("isValid"))
+        {
+           alert("项目角色填写的数据没通过验证。");
+           $('#ProjectRoles_Input').focus();
+           return false;
+        }
+        if (!$('#QQ_Input').validatebox("isValid"))
+        {
+           alert("QQ填写的数据没通过验证。");
+           $('#QQ_Input').focus();
+           return false;
+        }
+        if (!$('#Remark_Input').validatebox("isValid"))
+        {
+           alert("备注填写的数据没通过验证。");
+           $('#Remark_Input').focus();
+           return false;
+        }
+        if (!$('#Department_Input').validatebox("isValid"))
+        {
+           alert("部门填写的数据没通过验证。");
+           $('#Department_Input').focus();
+           return false;
+        }
+        if (!$('#MicroBlog_Input').validatebox("isValid"))
+        {
+           alert("微博填写的数据没通过验证。");
+           $('#MicroBlog_Input').focus();
+           return false;
+        }
+        if (!$('#WeChat_Input').validatebox("isValid"))
+        {
+           alert("微信填写的数据没通过验证。");
+           $('#WeChat_Input').focus();
+           return false;
+        }
+        if (!$('#NativePlace_Input').validatebox("isValid"))
+        {
+           alert("籍贯填写的数据没通过验证。");
+           $('#NativePlace_Input').focus();
+           return false;
+        }
+        if (!$('#GraduateSchool_Input').validatebox("isValid"))
+        {
+           alert("毕业学校填写的数据没通过验证。");
+           $('#GraduateSchool_Input').focus();
+           return false;
+        }
+        if (!$('#Sex_Input').validatebox("isValid"))
+        {
+           alert("性别填写的数据没通过验证。");
+           $('#Sex_Input').focus();
+           return false;
+        }
+        if (!$('#Birthdate_DateBox').datebox("isValid"))
+        {
+           alert("出生日期填写的数据没通过验证。");
+           $('#Birthdate_DateBox').focus();
+           return false;
+        }
+        if (!$('#LoverWorkUnit_Input').validatebox("isValid"))
+        {
+           alert("爱人工作单位填写的数据没通过验证。");
+           $('#LoverWorkUnit_Input').focus();
+           return false;
+        }
+        if (!$('#PreviousWorkUnits_Input').validatebox("isValid"))
+        {
+           alert("之前的工作单位填写的数据没通过验证。");
+           $('#PreviousWorkUnits_Input').focus();
+           return false;
+        }
+        if (!$('#HomeAddress_Input').validatebox("isValid"))
+        {
+           alert("家庭地址填写的数据没通过验证。");
+           $('#HomeAddress_Input').focus();
+           return false;
+        }
+        return true;
+    }
+
+    /******************  数据有效性验证 End ********************/
+
+
+
+
+    /******************* 保存数据（添加或者修改） Start ******************/
+    function SaveData() {
+
+        if (!Validate()) {
+            return;
+        }
+		var IsOK = false;
+        /***************  获取表单数据信息 Start  ******************/
+
+        var ID = escape($("#RecordIDHid").val()); // 注意：这里统一用ID这个命名
+		 
+        var IsMainContact = $("#IsMainContact_CheckBox")[0].checked;
+		
+        var Name = escape($("#Name_Input").val());
+		
+        var CustomerCode = escape($("#CustomerCode_NumberBox").val());
+		
+        var Position = escape($("#Position_Input").val());
+		
+        var Email = escape($("#Email_Input").val());
+		
+        var MobilePhone = escape($("#MobilePhone_Input").val());
+		
+        var ProjectRoles = escape($("#ProjectRoles_Input").val());
+		
+        var QQ = escape($("#QQ_Input").val());
+		
+        var Remark = escape($("#Remark_Input").val());
+		
+        var Department = escape($("#Department_Input").val());
+		
+        var MicroBlog = escape($("#MicroBlog_Input").val());
+		
+        var WeChat = escape($("#WeChat_Input").val());
+		
+        var NativePlace = escape($("#NativePlace_Input").val());
+		
+        var GraduateSchool = escape($("#GraduateSchool_Input").val());
+		
+        var Sex = escape($("#Sex_Input").val());
+		
+        var Birthdate = escape($("#Birthdate_DateBox").datebox('getValue'));
+		
+        var LoverWorkUnit = escape($("#LoverWorkUnit_Input").val());
+		
+        var PreviousWorkUnits = escape($("#PreviousWorkUnits_Input").val());
+		 
+        var MaritalStatus = $("#MaritalStatus_CheckBox")[0].checked;
+		 
+        var HaveAnyChildren = $("#HaveAnyChildren_CheckBox")[0].checked;
+		
+        var HomeAddress = escape($("#HomeAddress_Input").val());
+		
+
+        var dataStr = "ID=" + ID;
+		
+        dataStr += "&IsMainContact=" + IsMainContact;
+ 		
+        dataStr += "&Name=" + Name;
+ 		
+        dataStr += "&CustomerCode=" + CustomerCode;
+ 		
+        dataStr += "&Position=" + Position;
+ 		
+        dataStr += "&Email=" + Email;
+ 		
+        dataStr += "&MobilePhone=" + MobilePhone;
+ 		
+        dataStr += "&ProjectRoles=" + ProjectRoles;
+ 		
+        dataStr += "&QQ=" + QQ;
+ 		
+        dataStr += "&Remark=" + Remark;
+ 		
+        dataStr += "&Department=" + Department;
+ 		
+        dataStr += "&MicroBlog=" + MicroBlog;
+ 		
+        dataStr += "&WeChat=" + WeChat;
+ 		
+        dataStr += "&NativePlace=" + NativePlace;
+ 		
+        dataStr += "&GraduateSchool=" + GraduateSchool;
+ 		
+        dataStr += "&Sex=" + Sex;
+ 		
+        dataStr += "&Birthdate=" + Birthdate;
+ 		
+        dataStr += "&LoverWorkUnit=" + LoverWorkUnit;
+ 		
+        dataStr += "&PreviousWorkUnits=" + PreviousWorkUnits;
+ 		
+        dataStr += "&MaritalStatus=" + MaritalStatus;
+ 		
+        dataStr += "&HaveAnyChildren=" + HaveAnyChildren;
+ 		
+        dataStr += "&HomeAddress=" + HomeAddress;
+ 		
+   
+        /***************  获取表单数据信息 End  ******************/
+		
+        /********************  向服务器端请求 Start  ************************/
+		$.ajaxSettings.async = false;
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/CustomerContactTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+				    IsOK = true;
+                    // 成功
+                    alert(JsonResult.ReturnMessage);
+                } else {
+				    IsOK = false;
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+		$.ajaxSettings.async = true;
+        return IsOK;
+        /********************  向服务器端请求 End  ************************/
+
+    }
+
+    /******************* 保存数据（添加或者修改） End ******************/
+
+    // 重置表单数据
+    function ClearForm() {
+        $("#Form1")[0].reset();
+    }
+	function SaveDataAndClearForm()
+    {
+        if (SaveData()) {
+            ClearForm();
+        } else {
+             
+        }
+    }
+	function Save() {
+        if (SaveData()) {
+
+        }
+    }
+</script>
+<script type="text/javascript">
+    $(window).load(function () {
+	  
+      if (UrlHasParam(window.location.href, "pcode")) {
+         $("#PCodeHid").val(ReqStr(window.location.href, "pcode"));
+      }
+      if (UrlHasParam(window.location.href, "pagesubtitle")) {
+         $("#PageSubTitleLabel").html("父级："+ decodeURI(ReqStr(window.location.href, "pagesubtitle")));
+      }
+      
+      if (UrlHasParam(window.location.href, "id")) {
+        $("#RecordIDHid").val(ReqStr(window.location.href, "id"));
+        $("#PageTitleLabel").html("编辑记录");
+		$.ajaxSettings.async = false;
+        LoadDataAndFillForm();
+		$.ajaxSettings.async = true;
+		
+      }
+      
+      /*************************  默认值 Start  ***************************/
+      if (IsAdd()) {
+        
+        if (UrlHasParam(window.location.href, "pcode")) {
+            $("#CustomerCode_NumberBox").val(ReqStr(window.location.href, "pcode"));
+        }
+      }
+      /*************************  默认值 End  ***************************/
+	  
+        CustomerCodeToText();
+
+    });
+	
+</script>

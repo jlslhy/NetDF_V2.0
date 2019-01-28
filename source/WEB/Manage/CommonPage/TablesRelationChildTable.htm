@@ -1,0 +1,189 @@
+﻿ <table id="dgTablesRelation"></table>
+ <div id="DivPagerTablesRelation" style="background:#efefef;border:1px solid #ccc; margin-top:2px;"></div>
+  
+<script type="text/javascript">
+    function GetFieldsStr(showFieldsTxt) {
+        var rltFieldsStr = "";
+        var arrField = showFieldsTxt.split(",");
+        for (var i = 0; i < arrField.length; i++) {
+            if (i > 0) {
+                rltFieldsStr = rltFieldsStr + ",";
+            }
+            rltFieldsStr = rltFieldsStr + arrField[i].split("|")[0];
+        }
+        return rltFieldsStr;
+    }
+    function GetJsonAttribute(showFieldsTxt) {
+        var rltFieldsStr = "";
+        var arrField = showFieldsTxt.split(",");
+        for (var i = 0; i < arrField.length; i++) {
+            if (i > 0) {
+                rltFieldsStr = rltFieldsStr + ",";
+            }
+            rltFieldsStr = rltFieldsStr + "{ field: '" + arrField[i].split("|")[0] + "',title: '" + arrField[i].split("|")[1] + "'}";
+        }
+        return rltFieldsStr;
+    }
+
+</script>
+<script type="text/javascript">
+ 
+    var RelationDialogObj = $('#RelationDialog').dialog('options');
+    var RelationDialogQueryParams = RelationDialogObj["queryParams"];
+
+    var RelationTableName = RelationDialogQueryParams["RelationTableName"];
+    var RelationTableParentCode = RelationDialogQueryParams["RelationTableParentCode"];
+    var RelationTableChildCode = RelationDialogQueryParams["RelationTableChildCode"];
+    var RelationTableParentCodeVal = RelationDialogQueryParams["RelationTableParentCodeVal"];
+    var ChildTableName = RelationDialogQueryParams["ChildTableName"];
+    var ChildTableRelationCode = RelationDialogQueryParams["ChildTableRelationCode"];
+    var ChildTablePKey = RelationDialogQueryParams["ChildTablePKey"];
+ 
+    var ShowFields = RelationDialogQueryParams["ShowFields"];
+ 
+    var FieldsStr = GetFieldsStr(ShowFields);
+ 
+    TablesRelationBaseUrl = "/DataAccessCommon/TablesRelationChildTable.ashx?m=GetDataList&RelationTableName=" + RelationTableName + "&RelationTableParentCode=" + RelationTableParentCode + "&RelationTableChildCode=" + RelationTableChildCode + "&RelationTableParentCodeVal=" + RelationTableParentCodeVal + "&ChildTableName=" + ChildTableName + "&ChildTableRelationCode=" + ChildTableRelationCode + "&ChildTablePKey=" + ChildTablePKey + "&FieldsStr=" + FieldsStr;
+
+    CurrentTablesRelationRequestDataUrl = "";
+    CurrentTablesRelationCondition = "";
+
+
+    
+</script>
+<script type="text/javascript">
+     
+    $('#DivPagerTablesRelation').pagination({
+        onSelectPage: function (pageNumber, pageSize) {
+            $(this).pagination('loading');
+            loadChildTablePageData(pageNumber, pageSize);
+            $(this).pagination('loaded');
+        }
+    });
+    $('#DivPagerTablesRelation').pagination({
+        onRefresh: function (pageNumber, pageSize) {
+            VerGlobal = Date();
+            $(this).pagination('loading');
+            CurrentTablesRelationRequestDataUrl += "&Ver=" + Date();
+            loadChildTableData(CurrentTablesRelationRequestDataUrl);
+            $(this).pagination('loaded');
+        }
+    });
+
+    // 加载数据
+    function loadChildTableData(targetUrl) {
+
+        var temparr = "[[" + GetJsonAttribute(ShowFields) + ",{ field: ' ', title: '选择', formatter: childTableFormatEdit }]]";
+
+
+        $.ajax({
+            type: "Get",
+            url: targetUrl + "&VerGlobal=" + VerGlobal,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+                    ////////////////////// 绑定数据Start  ////////////////////
+                    var rows = JsonResult.rows;
+                    if (rows) {
+
+                        $('#dgTablesRelation').datagrid({
+                            data: rows,
+                            columns: eval(temparr)
+                        });
+
+                    } else {
+                        alert("对不起，没数据！");
+
+                        $('#dgTablesRelation').datagrid({
+                            data: []
+
+                        });
+                    }
+                    //// -------------------------------------- //////
+
+                    if (JsonResult.total) {
+                        $('#DivPagerTablesRelation').pagination({
+                            total: JsonResult.total
+                        });
+                    }
+
+                    //////////////////// 绑定数据End ///////////////
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                    $('#dgTablesRelation').datagrid({
+                        data: []
+                    });
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+        });
+    }
+
+    function childTableFormatEdit(val, row, index) {
+        var tempchecked = "";
+        if (eval("row." + RelationTableChildCode)) {
+            tempchecked = " checked=checked ";
+        }
+        return "<input type='checkbox' onclick=Relevance(" + eval("row." + ChildTablePKey) + ",this.checked); " + tempchecked + " />" ;
+
+    }
+
+    function Relevance(id, isRelevance) {
+        
+        $.getJSON("/DataAccessCommon/TablesRelationOpt.ashx",
+        {
+            m: "RelevanceTable",
+            RelationTableName: RelationTableName,
+            RelationTableParentCode: RelationTableParentCode,
+            RelationTableParentCodeVal: RelationTableParentCodeVal,
+            RelationTableChildCode: RelationTableChildCode,
+            RelationTableChildCodeVal: id,
+            IsRelevance: isRelevance
+        }
+        , function (json) {
+            //alert("JSON Data: " + json.users[3].name);
+
+        });
+
+
+    }
+
+
+
+    // 加载首页数据
+    function loadChildTableFirstPage() {
+       
+        var tempurl = TablesRelationBaseUrl + "&selecttypename=firstpage&pagesize=" + $('#DivPagerTablesRelation').pagination('options').pageSize + GetTablesRelationCondition(true);
+        CurrentTablesRelationRequestDataUrl = tempurl;
+        
+        loadChildTableData(CurrentTablesRelationRequestDataUrl);
+
+        $('#DivPagerTablesRelation').pagination({
+            pageNumber: 1
+        });
+
+    }
+
+    // 加载指定页数据
+    function loadChildTablePageData(pageNumber, pageSize) {
+        var tempurl = TablesRelationBaseUrl + "&selecttypename=gotopage&page=" + pageNumber + "&pagesize=" + pageSize + GetTablesRelationCondition(false);
+        CurrentTablesRelationRequestDataUrl = tempurl;
+        loadChildTableData(CurrentTablesRelationRequestDataUrl);
+    }
+    function GetTablesRelationCondition(refresh) {
+        if (refresh) {
+            CurrentTablesRelationCondition = "";
+        }
+        return CurrentTablesRelationCondition;
+    }
+
+</script>
+<script type="text/javascript">
+    loadChildTableFirstPage();
+</script>

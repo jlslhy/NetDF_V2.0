@@ -1,0 +1,4 @@
+H:\WebSite\课件网\KJGX\source\Model\bin\Release\Model.dll
+H:\WebSite\课件网\KJGX\source\Model\bin\Release\Model.pdb
+H:\WebSite\课件网\KJGX\source\Model\obj\Release\Model.dll
+H:\WebSite\课件网\KJGX\source\Model\obj\Release\Model.pdb

@@ -1,0 +1,7 @@
+E:\WebSite\ChuangShiJi\CSJ\Common\bin\Release\CSJ.Common.dll
+E:\WebSite\ChuangShiJi\CSJ\Common\bin\Release\COM.Excel.dll
+E:\WebSite\ChuangShiJi\CSJ\Common\bin\Release\OpenSmtp.dll
+E:\WebSite\ChuangShiJi\CSJ\Common\bin\Release\OWC10Chart.dll
+E:\WebSite\ChuangShiJi\CSJ\Common\obj\Release\ResolveAssemblyReference.cache
+E:\WebSite\ChuangShiJi\CSJ\Common\obj\Release\CSJ.Common.dll
+H:\WebSite\课件网\KJGX\source\Common\obj\Release\Common.csprojResolveAssemblyReference.cache

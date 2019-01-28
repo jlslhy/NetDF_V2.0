@@ -1,0 +1,451 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+<link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+<script type="text/javascript" src="/js/JQPrototype.js"></script>
+<script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+  <div>
+        <!-- 导航标题 Start -->
+        <div   class="PageTitle"  >
+            流程节点管理 >> 添加流程节点 >> <label id="PageTitleLabel" style=" color:green; font-weight:bold;">添加记录</label>
+        </div>
+		
+        <!-- 导航标题 End -->
+        <div title="表单区">
+          <form id="Form1" name="Form1" action="" >
+            <!-- 隐藏字段域 Start -->
+            <input id="RecordIDHid" type="hidden" value="" />
+            <!-- 隐藏字段域 End -->
+             
+            <div title="body">
+                <table class="formtable" >
+                  <tr>  
+                    <th>节点标识：</th>
+                    <td>
+                    <input id="NodeID_NumberBox"  class="easyui-numberbox" style=""  data-options=""     />
+                    </td>  
+                    <th>节点标记：</th>
+                    <td>
+                    <input id="NodeFlag_Input" name="NodeFlag_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>节点名称：</th>
+                    <td>
+                    <input id="NodeName_Input" name="NodeName_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>所属工作流程标识：</th>
+                    <td>
+                    <input id="WorkFlowID_NumberBox"  class="easyui-numberbox" style="border:0px; width:0px;"  data-options=""     /><label id="WorkFlowID_Lbl"  ></label> <a href="javascript:ShowIFrameBox('选择流程', '../WF_WorkFlow/WF_WorkFlowListSelect.htm?OpenType=iframe&RtnValueObj=WorkFlowID_NumberBox&RtnHtmlObj=WorkFlowID_Lbl&TextField=WorkFlowName&ValueField=WorkFlowID&SelectType=SingleSelect', 800, 480, 10);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" >选择</a>
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>支流先行：</th>
+                    <td> 
+                    <input id="BranchFlowBeforehand_CheckBox"  type="checkbox" /> 
+                    
+                    </td>  
+                    <th>是否并行：</th>
+                    <td> 
+                    <input id="IsConcurrent_CheckBox"  type="checkbox" /> 
+                    
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>并行的线路：</th>
+                    <td>
+                    <input id="ConcurrentOnLine_Input" name="ConcurrentOnLine_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>准入票：</th>
+                    <td>
+                    <input id="AdmissionTickets_Input" name="AdmissionTickets_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>可通过计数类型 0为数量 1 为百分比：</th>
+                    <td>
+                    <input id="CanPassCountType_NumberBox"  class="easyui-numberbox" style=""  data-options=""     />
+                    </td>  
+                    <th>可通过数量：</th>
+                    <td>
+                    <input id="CanPassCount_NumberBox"  class="easyui-numberbox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>可通过百分比：</th>
+                    <td>
+                    <input id="CanPassPercent_NumberBox"  class="easyui-numberbox" style=""  data-options=""     />
+                    </td>  
+                    <th>审批地址：</th>
+                    <td>
+                    <input id="ApprovalUrl_Input" name="ApprovalUrl_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>查阅地址：</th>
+                    <td>
+                    <input id="ViewUrl_Input" name="ViewUrl_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>备注：</th>
+                    <td>
+                    <input id="Remark_Input" name="Remark_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                </table>
+            </div>
+          </form>
+        </div>
+        <div title="操作区">
+        <a id="saveBtn" href="javascript:Save();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存</a>  
+        <a id="saveAndClearBtn" href="javascript:SaveDataAndClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存并清空</a>
+        <a id="clearBtn" href="javascript:ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="return confirm('真的要清空？');" >清空</a> 
+        <a id="backBtn" href="javascript:history.back();" class="easyui-linkbutton" data-options="iconCls:'icon-back'"  style="display:none;" >返回</a>
+        </div>
+
+   </div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+    // 检测是否在线
+    CheckUpLoginState();
+    /*************************  控件初始化 Start  ***************************/
+ 
+    if (location.href.indexOf("&showbackbtn=true") > 0 || location.href.indexOf("?showbackbtn=true") > 0) {
+        $("#backBtn").show();
+        $("#saveAndClearBtn").hide();
+    }
+    
+
+	
+    /*************************  控件初始化 End  ***************************/
+	
+</script>
+
+<script type="text/javascript">
+    /************************* 页面初始化与表单的数据绑定 Start ****************************/
+    function LoadDataAndFillForm() {
+
+        var ID = encodeURIComponent($("#RecordIDHid").val());
+        var dataStr = "ID=" + ID;
+        dataStr += "&m=GetJsonDataByID";
+        dataStr += "&Ver=" + new Date().getMilliseconds();
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/WF_NodeTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+
+
+                if (JsonResult.IsSuccess) {
+
+                    // 成功
+                    var data = JsonResult.Data;
+                    if (data.ID == "0") {
+                        data.ID = "";
+                    }
+                    if (data) {
+						
+                        $("#NodeID_NumberBox").val(data.NodeID);
+						
+                        $("#NodeFlag_Input").val(data.NodeFlag);
+						
+                        $("#NodeName_Input").val(data.NodeName);
+						
+                        $("#WorkFlowID_NumberBox").val(data.WorkFlowID);
+						 
+						if (data.BranchFlowBeforehand == "True") {
+                            $("#BranchFlowBeforehand_CheckBox").attr("checked", "checked");
+                        }else {
+                            $("#BranchFlowBeforehand_CheckBox").removeAttr("checked");
+                        }  
+						 
+						if (data.IsConcurrent == "True") {
+                            $("#IsConcurrent_CheckBox").attr("checked", "checked");
+                        }else {
+                            $("#IsConcurrent_CheckBox").removeAttr("checked");
+                        }  
+						
+                        $("#ConcurrentOnLine_Input").val(data.ConcurrentOnLine);
+						
+                        $("#AdmissionTickets_Input").val(data.AdmissionTickets);
+						
+                        $("#CanPassCountType_NumberBox").val(data.CanPassCountType);
+						
+                        $("#CanPassCount_NumberBox").val(data.CanPassCount);
+						
+                        $("#CanPassPercent_NumberBox").val(data.CanPassPercent);
+						
+                        $("#ApprovalUrl_Input").val(data.ApprovalUrl);
+						
+                        $("#ViewUrl_Input").val(data.ViewUrl);
+						
+                        $("#Remark_Input").val(data.Remark);
+						
+                    } else {
+                        alert("对不起，没数据！");
+                    }
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+
+	
+                    function WorkFlowIDToText() {
+                        var JsonResult = GetKeyValueJsonDataByDataTable("WF_WorkFlow", "WorkFlowName", "WorkFlowID", true, $("#WorkFlowID_NumberBox").val());
+                        if (JsonResult.IsSuccess && JsonResult.rows.length == 1) {
+                            $("#WorkFlowID_Lbl").html(JsonResult.rows[0]["DataKey"]);
+                        }
+                    }
+    /************************* 页面初始化与表单的数据绑定 End ****************************/  
+</script>
+
+<script type="text/javascript">
+    /******************  数据有效性验证 Start ********************/
+    function Validate() {
+	
+        if (!$('#NodeID_NumberBox').numberbox("isValid"))
+        {
+           alert("节点标识填写的数据没通过验证。");
+           $('#NodeID_NumberBox').focus();
+           return false;
+        }
+        if (IsExist("/DataAccess/WF_NodeTBL/OperateData.ashx", "NodeID", $("#NodeID_NumberBox").val(), $("#RecordIDHid").val()))
+        {
+            alert("此节点标识已经存在,请重新修改。");
+            return false;
+        }
+        if (!$('#NodeFlag_Input').validatebox("isValid"))
+        {
+           alert("节点标记填写的数据没通过验证。");
+           $('#NodeFlag_Input').focus();
+           return false;
+        }
+        if (!$('#NodeName_Input').validatebox("isValid"))
+        {
+           alert("节点名称填写的数据没通过验证。");
+           $('#NodeName_Input').focus();
+           return false;
+        }
+        if (!$('#WorkFlowID_NumberBox').numberbox("isValid"))
+        {
+           alert("所属工作流程标识填写的数据没通过验证。");
+           $('#WorkFlowID_NumberBox').focus();
+           return false;
+        }
+        if (!$('#ConcurrentOnLine_Input').validatebox("isValid"))
+        {
+           alert("并行的线路填写的数据没通过验证。");
+           $('#ConcurrentOnLine_Input').focus();
+           return false;
+        }
+        if (!$('#AdmissionTickets_Input').validatebox("isValid"))
+        {
+           alert("准入票填写的数据没通过验证。");
+           $('#AdmissionTickets_Input').focus();
+           return false;
+        }
+        if (!$('#CanPassCountType_NumberBox').numberbox("isValid"))
+        {
+           alert("可通过计数类型 0为数量 1 为百分比填写的数据没通过验证。");
+           $('#CanPassCountType_NumberBox').focus();
+           return false;
+        }
+        if (!$('#CanPassCount_NumberBox').numberbox("isValid"))
+        {
+           alert("可通过数量填写的数据没通过验证。");
+           $('#CanPassCount_NumberBox').focus();
+           return false;
+        }
+        if (!$('#CanPassPercent_NumberBox').numberbox("isValid"))
+        {
+           alert("可通过百分比填写的数据没通过验证。");
+           $('#CanPassPercent_NumberBox').focus();
+           return false;
+        }
+        if (!$('#ApprovalUrl_Input').validatebox("isValid"))
+        {
+           alert("审批地址填写的数据没通过验证。");
+           $('#ApprovalUrl_Input').focus();
+           return false;
+        }
+        if (!$('#ViewUrl_Input').validatebox("isValid"))
+        {
+           alert("查阅地址填写的数据没通过验证。");
+           $('#ViewUrl_Input').focus();
+           return false;
+        }
+        if (!$('#Remark_Input').validatebox("isValid"))
+        {
+           alert("备注填写的数据没通过验证。");
+           $('#Remark_Input').focus();
+           return false;
+        }
+        return true;
+    }
+
+    /******************  数据有效性验证 End ********************/
+
+
+
+
+    /******************* 保存数据（添加或者修改） Start ******************/
+    function SaveData() {
+
+        if (!Validate()) {
+            return;
+        }
+		var IsOK = false;
+        /***************  获取表单数据信息 Start  ******************/
+
+        var ID = escape($("#RecordIDHid").val()); // 注意：这里统一用ID这个命名
+		
+        var NodeID = escape($("#NodeID_NumberBox").val());
+		
+        var NodeFlag = escape($("#NodeFlag_Input").val());
+		
+        var NodeName = escape($("#NodeName_Input").val());
+		
+        var WorkFlowID = escape($("#WorkFlowID_NumberBox").val());
+		 
+        var BranchFlowBeforehand = $("#BranchFlowBeforehand_CheckBox")[0].checked;
+		 
+        var IsConcurrent = $("#IsConcurrent_CheckBox")[0].checked;
+		
+        var ConcurrentOnLine = escape($("#ConcurrentOnLine_Input").val());
+		
+        var AdmissionTickets = escape($("#AdmissionTickets_Input").val());
+		
+        var CanPassCountType = escape($("#CanPassCountType_NumberBox").val());
+		
+        var CanPassCount = escape($("#CanPassCount_NumberBox").val());
+		
+        var CanPassPercent = escape($("#CanPassPercent_NumberBox").val());
+		
+        var ApprovalUrl = escape($("#ApprovalUrl_Input").val());
+		
+        var ViewUrl = escape($("#ViewUrl_Input").val());
+		
+        var Remark = escape($("#Remark_Input").val());
+		
+
+        var dataStr = "ID=" + ID;
+		
+        dataStr += "&NodeID=" + NodeID;
+ 		
+        dataStr += "&NodeFlag=" + NodeFlag;
+ 		
+        dataStr += "&NodeName=" + NodeName;
+ 		
+        dataStr += "&WorkFlowID=" + WorkFlowID;
+ 		
+        dataStr += "&BranchFlowBeforehand=" + BranchFlowBeforehand;
+ 		
+        dataStr += "&IsConcurrent=" + IsConcurrent;
+ 		
+        dataStr += "&ConcurrentOnLine=" + ConcurrentOnLine;
+ 		
+        dataStr += "&AdmissionTickets=" + AdmissionTickets;
+ 		
+        dataStr += "&CanPassCountType=" + CanPassCountType;
+ 		
+        dataStr += "&CanPassCount=" + CanPassCount;
+ 		
+        dataStr += "&CanPassPercent=" + CanPassPercent;
+ 		
+        dataStr += "&ApprovalUrl=" + ApprovalUrl;
+ 		
+        dataStr += "&ViewUrl=" + ViewUrl;
+ 		
+        dataStr += "&Remark=" + Remark;
+ 		
+   
+        /***************  获取表单数据信息 End  ******************/
+		
+        /********************  向服务器端请求 Start  ************************/
+		$.ajaxSettings.async = false;
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/WF_NodeTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+				    IsOK = true;
+                    // 成功
+                    alert(JsonResult.ReturnMessage);
+                } else {
+				    IsOK = false;
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+		$.ajaxSettings.async = true;
+        return IsOK;
+        /********************  向服务器端请求 End  ************************/
+
+    }
+
+    /******************* 保存数据（添加或者修改） End ******************/
+
+    // 重置表单数据
+    function ClearForm() {
+        $("#Form1")[0].reset();
+    }
+	function SaveDataAndClearForm()
+    {
+        if (SaveData()) {
+            ClearForm();
+        } else {
+             
+        }
+    }
+	function Save() {
+        if (SaveData()) {
+
+        }
+    }
+</script>
+<script type="text/javascript">
+    $(window).load(function () {
+      if (UrlHasParam(window.location.href, "id")) {
+        $("#RecordIDHid").val(ReqStr(window.location.href, "id"));
+        $("#PageTitleLabel").html("编辑记录");
+		$.ajaxSettings.async = false;
+        LoadDataAndFillForm();
+		$.ajaxSettings.async = true;
+		
+    
+        WorkFlowIDToText();
+    
+    
+    
+      }
+      
+      /*************************  默认值 Start  ***************************/
+      if (IsAdd()) {
+        
+      }
+      /*************************  默认值 End  ***************************/
+    });
+</script>

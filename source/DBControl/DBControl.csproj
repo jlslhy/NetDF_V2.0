@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CCCB2768-9A1A-4BEE-8D80-18A64F2D5DFD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DBControl</RootNamespace>
+    <AssemblyName>DBControl</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\BLLOpt.cs" />
+    <Compile Include="Base\DALBase.cs" />
+    <Compile Include="Base\DALFactory.cs" />
+    <Compile Include="Base\DBAccess.cs" />
+    <Compile Include="BLL\AttachmentBLL.cs" />
+    <Compile Include="BLL\AttachmentBLL_Ext.cs" />
+    <Compile Include="BLL\DepartmentBLL.cs" />
+    <Compile Include="BLL\SystemRightBLL.cs" />
+    <Compile Include="BLL\WEB\CustomerBLL.cs" />
+    <Compile Include="BLL\WEB\CustomerBLL_Ext.cs" />
+    <Compile Include="BLL\WEB\CustomerContactBLL.cs" />
+    <Compile Include="BLL\WEB\CustomerContactBLL_Ext.cs" />
+    <Compile Include="BLL\WEB\CustomerDocumentaryBLL.cs" />
+    <Compile Include="BLL\WEB\CustomerDocumentaryBLL_Ext.cs" />
+    <Compile Include="BLL\WEB\OfficeSuppliesBLL.cs" />
+    <Compile Include="BLL\WEB\OfficeSuppliesBLL_Ext.cs" />
+    <Compile Include="BLL\WF_NodeBLL.cs" />
+    <Compile Include="BLL\WF_NodeBLL_Ext.cs" />
+    <Compile Include="BLL\WF_WorkFlowBLL.cs" />
+    <Compile Include="BLL\WF_WorkFlowBLL_Ext.cs" />
+    <Compile Include="DAL\AttachmentDAL.cs" />
+    <Compile Include="DAL\AttachmentDAL_Ext.cs" />
+    <Compile Include="DAL\DepartmentDAL.cs" />
+    <Compile Include="DAL\WEB\CustomerContactDAL.cs" />
+    <Compile Include="DAL\WEB\CustomerContactDAL_Ext.cs" />
+    <Compile Include="DAL\WEB\CustomerDAL.cs" />
+    <Compile Include="DAL\WEB\CustomerDAL_Ext.cs" />
+    <Compile Include="DAL\WEB\CustomerDocumentaryDAL.cs" />
+    <Compile Include="DAL\WEB\CustomerDocumentaryDAL_Ext.cs" />
+    <Compile Include="DAL\WEB\OfficeSuppliesDAL.cs" />
+    <Compile Include="DAL\WEB\OfficeSuppliesDAL_Ext.cs" />
+    <Compile Include="DAL\WF_NodeDAL.cs" />
+    <Compile Include="DAL\WF_NodeDAL_Ext.cs" />
+    <Compile Include="DAL\WF_WorkFlowDAL.cs" />
+    <Compile Include="DAL\WF_WorkFlowDAL_Ext.cs" />
+    <Compile Include="DBInfo\TabelBase.cs" />
+    <Compile Include="DBInfo\TableFieldInfo.cs" />
+    <Compile Include="DBInfo\Tables\AD.cs" />
+    <Compile Include="DBInfo\Tables\ADClass.cs" />
+    <Compile Include="DBInfo\Tables\ADContentList.cs" />
+    <Compile Include="DBInfo\Tables\ADDisplayMode.cs" />
+    <Compile Include="DBInfo\Tables\Attachment.cs" />
+    <Compile Include="DBInfo\Tables\AttachRelation.cs" />
+    <Compile Include="DBInfo\Tables\Comment.cs" />
+    <Compile Include="DBInfo\Tables\CommentRelation.cs" />
+    <Compile Include="DBInfo\Tables\DataDictionary.cs" />
+    <Compile Include="DBInfo\Tables\DataDictionaryCategory.cs" />
+    <Compile Include="DBInfo\Tables\Department.cs" />
+    <Compile Include="DBInfo\Tables\Menu.cs" />
+    <Compile Include="DBInfo\Tables\SystemLog.cs" />
+    <Compile Include="DBInfo\Tables\SystemRight.cs" />
+    <Compile Include="DBInfo\Tables\SystemRole.cs" />
+    <Compile Include="DBInfo\Tables\SystemRoleRelation.cs" />
+    <Compile Include="DBInfo\Tables\SystemRoleRightRelation.cs" />
+    <Compile Include="DBInfo\Tables\SystemRoleUsersRelation.cs" />
+    <Compile Include="DBInfo\Tables\SystemSetup.cs" />
+    <Compile Include="DBInfo\Tables\Users.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DBInfo\Tables\WEB\Customer.cs" />
+    <Compile Include="DBInfo\Tables\WEB\CustomerContact.cs" />
+    <Compile Include="DBInfo\Tables\WEB\CustomerDocumentary.cs" />
+    <Compile Include="DBInfo\Tables\WEB\Images.cs" />
+    <Compile Include="DBInfo\Tables\WEB\OfficeSupplies.cs" />
+    <Compile Include="DBInfo\Tables\WF_AlreadyHandled.cs" />
+    <Compile Include="DBInfo\Tables\WF_ApprovalLog.cs" />
+    <Compile Include="DBInfo\Tables\WF_EventDelegate.cs" />
+    <Compile Include="DBInfo\Tables\WF_Instance.cs" />
+    <Compile Include="DBInfo\Tables\WF_Node.cs" />
+    <Compile Include="DBInfo\Tables\WF_NodeContent.cs" />
+    <Compile Include="DBInfo\Tables\WF_NodeOnLine.cs" />
+    <Compile Include="DBInfo\Tables\WF_Thread.cs" />
+    <Compile Include="DBInfo\Tables\WF_WaitForHandling.cs" />
+    <Compile Include="DBInfo\Tables\WF_WorkFlow.cs" />
+    <Compile Include="DBInfo\TypeHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeExt.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DBUtility\DBUtility.csproj">
+      <Project>{7CBD4FC8-C9B2-4F52-AB05-775F367C2F43}</Project>
+      <Name>DBUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{E0D4AB57-6839-4B95-86B0-ECBDF34CF044}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SystemExtend\SystemExtend.csproj">
+      <Project>{65B7CE66-AD9B-4E87-81D4-3E41B4631936}</Project>
+      <Name>SystemExtend</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

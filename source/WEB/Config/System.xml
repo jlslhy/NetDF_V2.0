@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Config>
+  <Item>
+    <!-- Cookie|Session|Cookie_Session -->
+    <LoginState>Session</LoginState>
+  </Item>
+  <Item>
+    <SessionExpires>30</SessionExpires>
+  </Item>
+  <Item>
+    <CookieExpires>30</CookieExpires> 
+  </Item>
+</Config>

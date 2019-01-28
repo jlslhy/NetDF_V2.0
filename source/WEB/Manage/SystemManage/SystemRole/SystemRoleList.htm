@@ -1,0 +1,335 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+    <link href="../../../Styles/css.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+    <script type="text/javascript" src="/js/JQPrototype.js" ></script>
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/easyloader.js"></script>
+</head>
+<body>
+ <div  class="PageTitle" >
+       系统管理 >> 角色权限 >> 角色管理
+ </div>
+ <div title="搜索区">
+   <table class="searchtable">
+ 
+       
+                  <tr>
+				  
+                    <th>角色名称：</th>
+					<td> 
+					
+					<input id="SystemRoleName_Ipt"  />  
+					
+					</td>
+				  
+                    <th>角色说明：</th>
+					<td> 
+					
+					<input id="RoleDesc_Ipt"  />  
+					
+					</td>
+				
+                  </tr>
+			
+                  <tr>
+				  
+                    <th>是否系统角色：</th>
+					<td> 
+					 
+				    <input id="IsSystem_Cbx"  type="checkbox" /> 
+                    
+					</td>
+				
+                  </tr>
+			
+ 
+	 <tr>
+	   <th> </th>
+	   <td style=" text-align:left;" colspan="4" >
+          <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'"  onclick="Search();" >查询</a>  
+       </td>
+	 </tr>
+     
+   </table>
+ </div>
+ <table id="dg"></table>  
+ <div id="DivPager" style="background:#efefef;border:1px solid #ccc; margin-top:2px;"></div> 
+  <div id="RelationDialog"></div>
+ 
+</body>
+</html>
+
+
+
+<script type="text/javascript">
+    VerGlobal = Date();
+    BaseUrl = "/DataAccess/SystemRoleTBL/GetData.ashx?m=GetDataList";
+    CurrentRequestDataUrl = "";
+    CurrentCondition = "";
+</script>
+<script type="text/javascript">
+    /*************************  控件初始化 Start  ***************************/
+
+    /*
+    $('#PDepartmentID_Ipt').combotree({
+    url: '/DataAccess/SystemRoleTBL/GetData.ashx?m=GetAllJsonTreeData',
+    width: 200
+    });
+    */
+
+
+    /*************************  控件初始化 End  ***************************/
+</script>
+
+ 
+<script type="text/javascript">
+    $('#DivPager').pagination({
+        onSelectPage: function (pageNumber, pageSize) {
+            $(this).pagination('loading');
+            loadPageData(pageNumber, pageSize);
+            $(this).pagination('loaded');
+        }
+    });
+    $('#DivPager').pagination({
+        onRefresh: function (pageNumber, pageSize) {
+            VerGlobal = Date();
+            $(this).pagination('loading');
+            CurrentRequestDataUrl += "&Ver=" + Date();
+            loadData(CurrentRequestDataUrl);
+            $(this).pagination('loaded');
+        }
+    });
+
+
+
+    // 加载数据
+    function loadData(targetUrl) {
+        $.ajax({
+            type: "Get",
+            url: targetUrl + "&VerGlobal=" + VerGlobal,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+                    ////////////////////// 绑定数据Start  ////////////////////
+                    var rows = JsonResult.rows;
+                    if (rows) {
+
+                        $('#dg').datagrid({
+                            data: rows,
+                            columns: [[
+
+							{ field: 'SystemRoleName', title: '角色名称' },
+
+							{ field: 'RoleDesc', title: '角色说明' },
+
+							{ field: 'IsSystem', title: '是否系统角色' },
+
+                            { field: " ", title: '操作', formatter: formatEdit }
+                                     ]]
+                        });
+
+                    } else {
+                        alert("对不起，没数据！");
+
+                        $('#dg').datagrid({
+                            data: []
+
+                        });
+                    }
+                    //// -------------------------------------- //////
+
+                    if (JsonResult.total) {
+                        $('#DivPager').pagination({
+                            total: JsonResult.total
+                        });
+                    }
+
+                    //////////////////// 绑定数据End  ///////////////
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                    $('#dg').datagrid({
+                        data: []
+                    });
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+
+    function formatEdit(val, row, index) {
+        return "<a href='SystemRoleOperate.htm?id=" + row.SystemRoleID + "&showbackbtn=true'>编辑</a> <a href='javascript:DeleteByID(" + row.SystemRoleID + ");' onclick='return confirm(\"真的要删除？\");'>删除</a>  <a href='javascript:ShowRoleRightDialog(&quot;" + row.SystemRoleName + "&quot;," + row.SystemRoleID + ");'>角色权限</a>   <a href='javascript:ShowRoleUsersDialog(&quot;" + row.SystemRoleName + "&quot;," + row.SystemRoleID + ");'>角色用户</a>";
+
+    }
+
+    function formatIsEnabled(val, row) {
+        if (val) {
+            return "<font color='green'><b>是</b></font>";
+        } else {
+            return "<font color='gray'>否</font>";
+        }
+    }
+
+
+
+
+
+
+    // 加载首页数据
+    function loadFirstPage() {
+        var tempurl = BaseUrl + "&selecttypename=firstpage&pagesize=" + $('#DivPager').pagination('options').pageSize + GetCondition(true);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+
+        $('#DivPager').pagination({
+            pageNumber: 1
+        });
+
+    }
+
+    // 加载指定页数据
+    function loadPageData(pageNumber, pageSize) {
+        var tempurl = BaseUrl + "&selecttypename=gotopage&page=" + pageNumber + "&pagesize=" + pageSize + GetCondition(false);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+    }
+    function GetCondition(refresh) {
+        if (refresh) {
+            CurrentCondition = "";
+
+
+
+
+            if ($('#SystemRoleName_Ipt').val() != "") {
+                CurrentCondition += "&s_SystemRoleName=" + escape($('#SystemRoleName_Ipt').val());
+            }
+
+
+
+
+
+            if ($('#RoleDesc_Ipt').val() != "") {
+                CurrentCondition += "&s_RoleDesc=" + escape($('#RoleDesc_Ipt').val());
+            }
+
+
+
+
+
+            if ($('#IsSystem_Cbx').val() != "") {
+                CurrentCondition += "&s_IsSystem=" + $("#IsSystem_Cbx")[0].checked;
+            }
+
+
+
+
+        }
+        return CurrentCondition;
+    }
+
+
+    function OpenEditWin(id) {
+
+    }
+    function DeleteByID(id) {
+        var dataStr = "m=DeleteByID&id=" + id + "&ver=" + Date();
+        $.ajax({
+            type: "Get",
+            url: "/DataAccess/SystemRoleTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+
+                    alert(JsonResult.ReturnMessage);
+                    VerGlobal = Date();
+                    loadData(CurrentRequestDataUrl);
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+    }
+
+    function Search() {
+        VerGlobal = Date();
+        loadFirstPage();
+    }
+
+
+    function ShowRoleRightDialog(rolename,roleid) {
+        using(['dialog', 'messager'], function () {
+            $('#RelationDialog').dialog({
+                title: '角色权限 - ' + rolename,
+                top:20,
+                width: 800,
+                height: 480,
+                queryParams: {
+                    RelationTableName: 'SystemRoleRightRelation',
+                    RelationTableParentCode: 'SystemRoleID',
+                    RelationTableChildCode: 'SystemRightID',
+                    RelationTableParentCodeVal: roleid,
+                    ChildTableName: 'SystemRight',
+                    ChildTableRelationCode: 'ID',
+                    ChildTablePKey:'ID',
+                    ShowFields: 'ID|序号,RightCode|权限编号,RightName|权限名称,RightDesc|权限说明'
+                },
+                modal: true,
+                href: '../../commonpage/TablesRelationChildTable.htm'
+            });
+
+        });
+  
+    }
+
+    function ShowRoleUsersDialog(rolename, roleid) {
+        using(['dialog', 'messager'], function () {
+            $('#RelationDialog').dialog({
+                title: '角色用户 - ' + rolename,
+                top: 20,
+                width: 800,
+                height: 480,
+                queryParams: {
+                    RelationTableName: 'SystemRoleUsersRelation',
+                    RelationTableParentCode: 'SystemRoleID',
+                    RelationTableChildCode: 'SystemUserID',
+                    RelationTableParentCodeVal: roleid,
+                    ChildTableName: 'Users',
+                    ChildTableRelationCode: 'UserID',
+                    ChildTablePKey: 'UserID',
+                    ShowFields: 'UserID|序号,LoginID|登录ID,RealName|用户姓名,Mobile|手机号码'
+                },
+                modal: true,
+                href: '../../commonpage/TablesRelationChildTable.htm'
+            });
+
+        });
+
+    }
+
+
+    
+
+</script>
+<script type="text/javascript">
+    loadFirstPage();
+</script>
+
+

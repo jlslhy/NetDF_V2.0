@@ -1,0 +1,43 @@
+﻿#VerInfo#
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Collections.Generic;
+namespace Model#WebName##Folder#
+{
+    public class #TableName#_Model:Model.Base.ModelBase
+    {
+	    public #TableName#_Model()
+        {
+            TableName = "#TableName#";
+            PKey = "#PKey#";
+            PKeyDataType = #PKeyDataType#;
+        }
+
+        public override object PKeyValue
+        {
+            get
+            {
+                return M_#PKey#;
+            }
+            set
+            {
+                M_#PKey# = (#PKeyTypeName#)value;
+            }
+        }
+
+        #AddSQLCode#
+
+        #UpdateSQLCode#
+
+        #ParamsForAddCode#
+
+        #ParamsForUpdateCode#
+
+        #GetNotKeyParamsCode#
+
+	    #MemberCode#
+
+		#PropertyCode#
+    }
+}

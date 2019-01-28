@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+<link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+<script type="text/javascript" src="/js/JQPrototype.js"></script>
+<script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+  <div>
+        <!-- 导航标题 Start -->
+        <div   class="PageTitle"  >
+            系统管理 >> 系统配置 >> 添加
+        </div>
+        <!-- 导航标题 End -->
+        <div title="表单区">
+          <form id="Form1" name="Form1" action="" >
+            <!-- 隐藏字段域 Start -->
+            <input id="RecordIDHid" type="hidden" value="" />
+            <!-- 隐藏字段域 End -->
+             
+            <div title="body">
+                <table class="formtable" >
+                  <tr>  
+                    <th>键名：</th>
+					<td>
+					<input id="KeyCode_Ipt" class="easyui-validatebox" data-options="required:true"  />  
+					</td>  
+                    <th>值：</th>
+					<td>
+					<input id="SetupValue_Ipt"  />  
+					</td>
+				  </tr>
+                  <tr>  
+                    <th>分类：</th>
+					<td>
+					<input id="SetupType_Ipt"  />  
+					</td>  
+                    <th>备注：</th>
+					<td>
+					<input id="Remark_Ipt"  />  
+					</td>
+				  </tr>
+				</table>
+            </div>
+          </form>
+        </div>
+        <div title="操作区">
+        <a id="saveBtn" href="javascript:SaveData();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存</a>  
+        <a id="saveAndClearBtn" href="javascript:SaveData();ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存并清空</a>
+        <a id="clearBtn" href="javascript:ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="return confirm('真的要清空？');" >清空</a> 
+        <a id="backBtn" href="javascript:history.back();" class="easyui-linkbutton" data-options="iconCls:'icon-back'"  style="display:none;" >返回</a>
+        </div>
+
+   </div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+    // 检测是否在线
+    CheckUpLoginState();
+    /*************************  控件初始化 Start  ***************************/
+
+    /*
+    $('#DepartmentID_Ipt').combotree({
+        url: '/DataAccess/DepartmentTBL/GetData.ashx?m=GetAllJsonTreeData',
+        required: true
+    });
+	*/
+
+
+    if (location.href.indexOf("&showbackbtn=true") > 0 || location.href.indexOf("?showbackbtn=true") > 0) {
+        $("#backBtn").show();
+        $("#saveAndClearBtn").hide();
+    }
+
+
+    /*************************  控件初始化 End  ***************************/
+
+
+</script>
+
+<script type="text/javascript">
+    /************************* 页面初始化与表单的数据绑定 Start ****************************/
+    function LoadDataAndFillForm() {
+
+        var ID = encodeURIComponent($("#RecordIDHid").val());
+        var dataStr = "ID=" + ID;
+        dataStr += "&m=GetJsonDataByID";
+        dataStr += "&Ver=" + new Date().getMilliseconds();
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/SystemSetupTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+
+
+                if (JsonResult.IsSuccess) {
+
+                    // 成功
+                    var data = JsonResult.Data;
+                    if (data.ID == "0") {
+                        data.ID = "";
+                    }
+                    if (data) {
+
+                        $("#KeyCode_Ipt").val(data.KeyCode);
+
+                        $("#SetupValue_Ipt").val(data.SetupValue);
+
+                        $("#SetupType_Ipt").val(data.SetupType);
+
+                        $("#Remark_Ipt").val(data.Remark);
+
+                    } else {
+                        alert("对不起，没数据！");
+                    }
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+    if (UrlHasParam(window.location.href, "id")) {
+
+        $("#RecordIDHid").val(ReqStr(window.location.href, "id"));
+        LoadDataAndFillForm();
+    }
+    /************************* 页面初始化与表单的数据绑定 End ****************************/
+</script>
+
+<script type="text/javascript">
+    /******************  数据有效性验证 Start ********************/
+    function Validate() {
+        /*
+        if (!$('#LoginID_Ipt').validatebox("isValid")) {
+            alert("请填写好用户登录ID。");
+            $('#LoginID_Ipt').focus();
+            return false;
+        }
+
+        if (!$('#RealName_Ipt').validatebox("isValid")) {
+            alert("请填写好用户姓名。");
+            $('#RealName_Ipt').focus();
+            return false;
+        }
+		*/
+        return true;
+    }
+
+    /******************  数据有效性验证 End ********************/
+
+
+
+
+    /******************* 保存数据（添加或者修改） Start ******************/
+    function SaveData() {
+
+        if (!Validate()) {
+            return;
+        }
+
+        /***************  获取表单数据信息 Start  ******************/
+
+        var ID = escape($("#RecordIDHid").val()); // 注意：这里统一用ID这个命名
+
+
+
+        var KeyCode = escape($("#KeyCode_Ipt").val());
+
+
+
+        var SetupValue = escape($("#SetupValue_Ipt").val());
+
+
+
+        var SetupType = escape($("#SetupType_Ipt").val());
+
+
+
+        var Remark = escape($("#Remark_Ipt").val());
+
+
+        var dataStr = "ID=" + ID;
+
+        dataStr += "&KeyCode=" + KeyCode;
+
+        dataStr += "&SetupValue=" + SetupValue;
+
+        dataStr += "&SetupType=" + SetupType;
+
+        dataStr += "&Remark=" + Remark;
+
+
+        /***************  获取表单数据信息 End  ******************/
+
+        /********************  向服务器端请求 Start  ************************/
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/SystemSetupTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+                    alert(JsonResult.ReturnMessage);
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+        /********************  向服务器端请求 End  ************************/
+
+    }
+
+    /******************* 保存数据（添加或者修改） End ******************/
+
+    // 重置表单数据
+    function ClearForm() {
+        $("#Form1")[0].reset();
+    }
+
+</script>

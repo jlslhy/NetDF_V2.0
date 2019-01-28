@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+        <link href="../../UIFramkwork/ext-2.0.2/resources/css/ext-all.css" rel="stylesheet"
+        type="text/css" />
+    <script src="../../UIFramkwork/ext-2.0.2/adapter/ext/ext-base.js" type="text/javascript"></script>
+    <script src="../../UIFramkwork/ext-2.0.2/ext-all.js" type="text/javascript"></script>
+
+
+    <script type="text/javascript">
+
+extjsAnimal = function(){
+    var config = {
+        title:"飞出的消息框"
+        , msg: "dddddddddd"
+        , width: 400
+        , multiline: true
+        , closable: false
+        ,buttons:Ext.MessageBox.YESNOCANCEL
+        ,icon:Ext.MessageBox.QUESTION
+        ,animEl:"fly"
+    };
+
+    Ext.MessageBox.show(config);
+    }
+
+
+
+
+
+</script>
+
+
+</head>
+<body>
+
+
+<input id="ipt1"  type="button"  value="val"  onclick="extjsAnimal()" />
+
+
+
+</body>
+</html>

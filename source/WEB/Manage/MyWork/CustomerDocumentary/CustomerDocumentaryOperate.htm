@@ -1,0 +1,367 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+<link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+<script type="text/javascript" src="/js/JQPrototype.js"></script>
+<script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+  <div>
+        <!-- 导航标题 Start -->
+        <div   class="PageTitle"  >
+            客户管理 >> 客户跟单 >> 添加 >> <label id="PageTitleLabel" style=" color:green; font-weight:bold;">添加记录</label>
+        </div>
+		
+        <!-- 导航标题 End -->
+        <div title="表单区">
+          <form id="Form1" name="Form1" action="" >
+            <!-- 隐藏字段域 Start -->
+            <input id="RecordIDHid" type="hidden" value="" />
+            <!-- 隐藏字段域 End -->
+             
+            <div title="body">
+                <table class="formtable" >
+                  <tr>  
+                    <th>客户编码：</th>
+                    <td>
+                    <input id="CustomerCode_NumberBox"  class="easyui-numberbox" style="border:0px; width:0px;"  data-options=""     /><label id="CustomerCode_Lbl"  ></label> <a href="javascript:ShowIFrameBox('选择流程', '../Customer/CustomerListSelect.htm?OpenType=iframe&RtnValueObj=CustomerCode_NumberBox&RtnHtmlObj=CustomerCode_Lbl&TextField=CustomerName&ValueField=CustomerCode&SelectType=SingleSelect', 800, 480, 10);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" >选择</a>
+                    </td>  
+                    <th>跟单人：</th>
+                    <td>
+                    <input id="DocumentaryPeople_Input" name="DocumentaryPeople_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>客户级别：</th>
+                    <td>
+                    <input  
+                    id="CustomerLevel_ComboBox"
+                    name="CustomerLevel_ComboBox"
+                    class="easyui-combobox"
+                    data-options="
+                    url:'/DataAccess/DataDictionaryTBL/GetData_Extend.ashx?m=GetJsonDataByCategoryCode&CategoryCode=CustomerLevel'
+                    ,valueField:'DataValue'
+                    ,textField:'DataKey'
+                    ,panelHeight:'auto'
+                    " />
+                    </td>  
+                    <th>销售阶段：</th>
+                    <td>
+                    <input  
+                    id="SalesStage_ComboBox"
+                    name="SalesStage_ComboBox"
+                    class="easyui-combobox"
+                    data-options="
+                    url:'/DataAccess/DataDictionaryTBL/GetData_Extend.ashx?m=GetJsonDataByCategoryCode&CategoryCode=SalesStage'
+                    ,valueField:'DataValue'
+                    ,textField:'DataKey'
+                    ,panelHeight:'auto'
+                    " />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>跟单内容：</th>
+                    <td>
+                    <input id="DocumentaryContent_Input" name="DocumentaryContent_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>下次跟单日期：</th>
+                    <td>
+                    <input id="NextDocumentaryDate_DateBox"  class="easyui-datebox"  />
+					
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>提醒备注：</th>
+                    <td>
+                    <input id="ReminderNote_Input" name="ReminderNote_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>附件：</th>
+                    <td>
+                                                          <input id="Attachment_UploadFiles"   class="easyui-validatebox"  type="text"     />
+                    <a href="javascript:ShowIFrameBox('客户跟单文档', '/Upload/index.html?OpenType=iframe&RtnValueObj=Attachment_UploadFiles&fileMaxNum=100&BatchGUID='+$('#Attachment_UploadFiles').val(), 800, 480, 10);" class="easyui-linkbutton" data-options="iconCls:'icon-add'">上传</a>
+                    <a href="javascript:ShowIFrameBox('附件查看与下载', '/Manage/SystemManage/Attachment/AttachmentList.htm?BatchGUID='+$('#Attachment_UploadFiles').val(), 800, 480, 10);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查看与下载</a>
+                    </td>
+                  </tr>
+                </table>
+            </div>
+          </form>
+        </div>
+        <div title="操作区">
+        <a id="saveBtn" href="javascript:Save();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存</a>  
+        <a id="saveAndClearBtn" href="javascript:SaveDataAndClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存并清空</a>
+        <a id="clearBtn" href="javascript:ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="return confirm('真的要清空？');" >清空</a> 
+        <a id="backBtn" href="javascript:history.back();" class="easyui-linkbutton" data-options="iconCls:'icon-back'"  style="display:none;" >返回</a>
+        </div>
+
+   </div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+    // 检测是否在线
+    CheckUpLoginState();
+    /*************************  控件初始化 Start  ***************************/
+ 
+    if (location.href.indexOf("&showbackbtn=true") > 0 || location.href.indexOf("?showbackbtn=true") > 0) {
+        $("#backBtn").show();
+        $("#saveAndClearBtn").hide();
+    }
+    
+
+	
+    /*************************  控件初始化 End  ***************************/
+	
+</script>
+
+<script type="text/javascript">
+    /************************* 页面初始化与表单的数据绑定 Start ****************************/
+    function LoadDataAndFillForm() {
+
+        var ID = encodeURIComponent($("#RecordIDHid").val());
+        var dataStr = "ID=" + ID;
+        dataStr += "&m=GetJsonDataByID";
+        dataStr += "&Ver=" + new Date().getMilliseconds();
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/CustomerDocumentaryTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+
+
+                if (JsonResult.IsSuccess) {
+
+                    // 成功
+                    var data = JsonResult.Data;
+                    if (data.ID == "0") {
+                        data.ID = "";
+                    }
+                    if (data) {
+						
+                        $("#CustomerCode_NumberBox").val(data.CustomerCode);
+						
+                        $("#DocumentaryPeople_Input").val(data.DocumentaryPeople);
+						
+                        $('#CustomerLevel_ComboBox').combobox('setValue',data.CustomerLevel);
+
+                        $('#SalesStage_ComboBox').combobox('setValue',data.SalesStage);
+
+                        $("#DocumentaryContent_Input").val(data.DocumentaryContent);
+						
+                        $("#NextDocumentaryDate_DateBox").datebox('setValue',new Date(data.NextDocumentaryDate.replace(/-/g, "/")).getFullYear() + "-" + (new Date(data.NextDocumentaryDate.replace(/-/g, "/")).getMonth() + 1) + "-" + new Date(data.NextDocumentaryDate.replace(/-/g, "/")).getDate());
+						
+                        $("#ReminderNote_Input").val(data.ReminderNote);
+						
+                        $('#Attachment_UploadFiles').val(data.Attachment);
+						
+                    } else {
+                        alert("对不起，没数据！");
+                    }
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+
+	
+                    function CustomerCodeToText() {
+                        var JsonResult = GetKeyValueJsonDataByDataTable("Customer", "CustomerName", "CustomerCode", true, $("#CustomerCode_NumberBox").val());
+                        if (JsonResult.IsSuccess && JsonResult.rows.length == 1) {
+                            $("#CustomerCode_Lbl").html(JsonResult.rows[0]["DataKey"]);
+                        }
+                    }
+    /************************* 页面初始化与表单的数据绑定 End ****************************/  
+</script>
+
+<script type="text/javascript">
+    /******************  数据有效性验证 Start ********************/
+    function Validate() {
+	
+        if (!$('#CustomerCode_NumberBox').numberbox("isValid"))
+        {
+           alert("客户编码填写的数据没通过验证。");
+           $('#CustomerCode_NumberBox').focus();
+           return false;
+        }
+        if (!$('#DocumentaryPeople_Input').validatebox("isValid"))
+        {
+           alert("跟单人填写的数据没通过验证。");
+           $('#DocumentaryPeople_Input').focus();
+           return false;
+        }
+        if (!$('#CustomerLevel_ComboBox').combobox("isValid"))
+        {
+           alert("客户级别填写的数据没通过验证。");
+           $('#CustomerLevel_ComboBox').focus();
+           return false;
+        }
+        if (!$('#SalesStage_ComboBox').combobox("isValid"))
+        {
+           alert("销售阶段填写的数据没通过验证。");
+           $('#SalesStage_ComboBox').focus();
+           return false;
+        }
+        if (!$('#DocumentaryContent_Input').validatebox("isValid"))
+        {
+           alert("跟单内容填写的数据没通过验证。");
+           $('#DocumentaryContent_Input').focus();
+           return false;
+        }
+        if (!$('#NextDocumentaryDate_DateBox').datebox("isValid"))
+        {
+           alert("下次跟单日期填写的数据没通过验证。");
+           $('#NextDocumentaryDate_DateBox').focus();
+           return false;
+        }
+        if (!$('#ReminderNote_Input').validatebox("isValid"))
+        {
+           alert("提醒备注填写的数据没通过验证。");
+           $('#ReminderNote_Input').focus();
+           return false;
+        }
+        if (!$('#Attachment_UploadFiles').validatebox("isValid"))
+        {
+           alert("附件填写的数据没通过验证。");
+           $('#Attachment_UploadFiles').focus();
+           return false;
+        }
+        return true;
+    }
+
+    /******************  数据有效性验证 End ********************/
+
+
+
+
+    /******************* 保存数据（添加或者修改） Start ******************/
+    function SaveData() {
+
+        if (!Validate()) {
+            return;
+        }
+		var IsOK = false;
+        /***************  获取表单数据信息 Start  ******************/
+
+        var ID = escape($("#RecordIDHid").val()); // 注意：这里统一用ID这个命名
+		
+        var CustomerCode = escape($("#CustomerCode_NumberBox").val());
+		
+        var DocumentaryPeople = escape($("#DocumentaryPeople_Input").val());
+		
+        var CustomerLevel = $('#CustomerLevel_ComboBox').combobox('getValue');
+        
+        var SalesStage = $('#SalesStage_ComboBox').combobox('getValue');
+        
+        var DocumentaryContent = escape($("#DocumentaryContent_Input").val());
+		
+        var NextDocumentaryDate = escape($("#NextDocumentaryDate_DateBox").datebox('getValue'));
+		
+        var ReminderNote = escape($("#ReminderNote_Input").val());
+		
+        var Attachment = $('#Attachment_UploadFiles').val();
+		
+
+        var dataStr = "ID=" + ID;
+		
+        dataStr += "&CustomerCode=" + CustomerCode;
+ 		
+        dataStr += "&DocumentaryPeople=" + DocumentaryPeople;
+ 		
+        dataStr += "&CustomerLevel=" + CustomerLevel;
+ 		
+        dataStr += "&SalesStage=" + SalesStage;
+ 		
+        dataStr += "&DocumentaryContent=" + DocumentaryContent;
+ 		
+        dataStr += "&NextDocumentaryDate=" + NextDocumentaryDate;
+ 		
+        dataStr += "&ReminderNote=" + ReminderNote;
+ 		
+        dataStr += "&Attachment=" + Attachment;
+ 		
+   
+        /***************  获取表单数据信息 End  ******************/
+		
+        /********************  向服务器端请求 Start  ************************/
+		$.ajaxSettings.async = false;
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/CustomerDocumentaryTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+				    IsOK = true;
+                    // 成功
+                    alert(JsonResult.ReturnMessage);
+                } else {
+				    IsOK = false;
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+		$.ajaxSettings.async = true;
+        return IsOK;
+        /********************  向服务器端请求 End  ************************/
+
+    }
+
+    /******************* 保存数据（添加或者修改） End ******************/
+
+    // 重置表单数据
+    function ClearForm() {
+        $("#Form1")[0].reset();
+    }
+	function SaveDataAndClearForm()
+    {
+        if (SaveData()) {
+            ClearForm();
+        } else {
+             
+        }
+    }
+	function Save() {
+        if (SaveData()) {
+
+        }
+    }
+</script>
+<script type="text/javascript">
+    $(window).load(function () {
+	  
+      if (UrlHasParam(window.location.href, "id")) {
+        $("#RecordIDHid").val(ReqStr(window.location.href, "id"));
+        $("#PageTitleLabel").html("编辑记录");
+		$.ajaxSettings.async = false;
+        LoadDataAndFillForm();
+		$.ajaxSettings.async = true;
+		
+      }
+      
+      /*************************  默认值 Start  ***************************/
+      if (IsAdd()) {
+        
+      }
+      /*************************  默认值 End  ***************************/
+	  
+        CustomerCodeToText();
+
+    });
+	
+</script>

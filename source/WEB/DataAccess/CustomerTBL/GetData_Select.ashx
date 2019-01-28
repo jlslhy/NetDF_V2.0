@@ -1,0 +1,1 @@
+﻿<%@ WebHandler Language="C#" CodeBehind="GetData_Select.ashx.cs" Class="WEB.DataAccess.CustomerTBL.GetData_Select" %>

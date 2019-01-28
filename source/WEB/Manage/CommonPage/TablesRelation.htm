@@ -1,0 +1,167 @@
+﻿ <table id="dgTablesRelation"></table>  
+ <div id="DivPagerTablesRelation" style="background:#efefef;border:1px solid #ccc; margin-top:2px;"></div>
+<script type="text/javascript">
+    function GetFieldsStr(showFieldsTxt) {
+        var rltFieldsStr = "";
+        var arrField = showFieldsTxt.split(",");
+        for (var i = 0; i < arrField.length; i++) {
+            if (i > 0) {
+                rltFieldsStr = rltFieldsStr + ",";
+            }
+            rltFieldsStr = rltFieldsStr + arrField[i].split("|")[0];
+        }
+        return rltFieldsStr;
+    }
+</script>
+<script type="text/javascript">
+    
+
+
+    var RelationDialogObj = $('#RelationDialog').dialog('options');
+    var RelationDialogQueryParams = RelationDialogObj["queryParams"];
+
+    var RelationTableName = RelationDialogQueryParams["RelationTableName"];
+    var RelationTableParentCode = RelationDialogQueryParams["RelationTableParentCode"];
+    var RelationTableChildCode = RelationDialogQueryParams["RelationTableChildCode"];
+    var RelationTableParentCodeVal = RelationDialogQueryParams["RelationTableParentCodeVal"];
+    var ChildTableName = RelationDialogQueryParams["ChildTableName"];
+    var ChildTableRelationCode = RelationDialogQueryParams["ChildTableRelationCode"];
+    var ChildTablePKey = RelationDialogQueryParams["ChildTablePKey"];
+ 
+    var ShowFields = RelationDialogQueryParams["ShowFields"];
+
+
+    var FieldsStr = GetFieldsStr(ShowFields);
+
+
+
+    TablesRelationBaseUrl = "/DataAccessCommon/TablesRelation.ashx?m=GetDataList&RelationTableName=" + RelationTableName + "&RelationTableParentCode=" + RelationTableParentCode + "&RelationTableChildCode=" + RelationTableChildCode + "&RelationTableParentCodeVal=" + RelationTableParentCodeVal + "&ChildTableName=" + ChildTableName + "&ChildTableRelationCode=" + ChildTableRelationCode + "&ChildTablePKey=" + ChildTablePKey + "&FieldsStr=" + FieldsStr;
+ 
+    CurrentTablesRelationRequestDataUrl = "";
+    CurrentTablesRelationCondition = "";
+
+
+    
+</script>
+<script type="text/javascript">
+     
+    $('#DivPagerTablesRelation').pagination({
+        onSelectPage: function (pageNumber, pageSize) {
+            $(this).pagination('loading');
+            loadChildTablePageData(pageNumber, pageSize);
+            $(this).pagination('loaded');
+        }
+    });
+    $('#DivPagerTablesRelation').pagination({
+        onRefresh: function (pageNumber, pageSize) {
+            VerGlobal = Date();
+            $(this).pagination('loading');
+            CurrentTablesRelationRequestDataUrl += "&Ver=" + Date();
+            loadChildTableData(CurrentTablesRelationRequestDataUrl);
+            $(this).pagination('loaded');
+        }
+    });
+
+    // 加载数据
+    function loadChildTableData(targetUrl) {
+
+        var temparr = "[[{ field: 'ID', title: '序号' },{ field: 'RightCode', title: '权限编号' },{ field: 'RightName', title: '权限名称' },{ field: 'RightDesc', title: '权限说明' },{ field: ' ', title: '操作', formatter: childTableFormatEdit }]]";
+        $.ajax({
+            type: "Get",
+            url: targetUrl + "&VerGlobal=" + VerGlobal,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+                    ////////////////////// 绑定数据Start  ////////////////////
+                    var rows = JsonResult.rows;
+                    if (rows) {
+
+                        $('#dgTablesRelation').datagrid({
+                            data: rows,
+                            columns: eval(temparr)
+                        });
+
+                    } else {
+                        alert("对不起，没数据！");
+
+                        $('#dgTablesRelation').datagrid({
+                            data: []
+
+                        });
+                    }
+                    //// -------------------------------------- //////
+
+                    if (JsonResult.total) {
+                        $('#DivPagerTablesRelation').pagination({
+                            total: JsonResult.total
+                        });
+                    }
+
+                    //////////////////// 绑定数据End ///////////////
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                    $('#dgTablesRelation').datagrid({
+                        data: []
+                    });
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+        });
+    }
+
+    function childTableFormatEdit(val, row, index) {
+        return "<a href='javascript:DeleteByID(" + row.SystemRoleID + ");' onclick='return confirm(\"真的要删除？\");'>删除</a>";
+
+    }
+
+    // 加载首页数据
+    function loadChildTableFirstPage() {
+       
+        var tempurl = TablesRelationBaseUrl + "&selecttypename=firstpage&pagesize=" + $('#DivPagerTablesRelation').pagination('options').pageSize + GetTablesRelationCondition(true);
+        CurrentTablesRelationRequestDataUrl = tempurl;
+        
+        loadChildTableData(CurrentTablesRelationRequestDataUrl);
+
+        $('#DivPagerTablesRelation').pagination({
+            pageNumber: 1
+        });
+
+    }
+
+    // 加载指定页数据
+    function loadChildTablePageData(pageNumber, pageSize) {
+        var tempurl = TablesRelationBaseUrl + "&selecttypename=gotopage&page=" + pageNumber + "&pagesize=" + pageSize + GetTablesRelationCondition(false);
+        CurrentTablesRelationRequestDataUrl = tempurl;
+        loadChildTableData(CurrentTablesRelationRequestDataUrl);
+    }
+    function GetTablesRelationCondition(refresh) {
+        if (refresh) {
+            CurrentTablesRelationCondition = "";
+        }
+        return CurrentTablesRelationCondition;
+    }
+ 
+ /*
+ [[
+                            { field: 'ID', title: '序号' },
+
+							{ field: 'RightCode', title: '权限编号' },
+
+							{ field: 'RightName', title: '权限名称' },
+
+							{ field: 'RightDesc', title: '权限说明' },
+
+                            { field: " ", title: '操作', formatter: childTableFormatEdit }
+                                     ]]
+ */
+
+</script>
+<script type="text/javascript">
+    loadChildTableFirstPage();
+</script>

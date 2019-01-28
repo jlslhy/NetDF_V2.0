@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css">   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css">   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+</head>
+<body>
+<input id="ss" class="easyui-numberspinner" style="width:80px;"   
+        required="required" data-options="min:10,max:100,editable:false">  
+
+        <input id="Text1" required="required" style="width:80px;">  
+
+
+        <input class="easyui-numberspinner" value="1234567890" style="width:150px;"   
+        data-options="required:true,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'$'" />  
+
+ 
+<br />
+<a href="#" onclick="test();" >测试</a>
+
+
+<a href="#" onclick="test2();" >测试2</a>
+ 
+<script type="text/javascript">
+
+    $('#Text1').numberspinner({
+        min: 10,
+        max: 100,
+        editable: false
+    });  
+
+
+</script>
+ 
+<script type="text/javascript">
+    function test() {
+
+
+
+
+    }
+    function test2() {
+
+
+    }
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

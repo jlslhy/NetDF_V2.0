@@ -1,0 +1,8 @@
+E:\WebSite\ChuangShiJi\CSJ\Web.UI\obj\Debug\ResolveAssemblyReference.cache
+E:\WebSite\ChuangShiJi\CSJ\Web.UI\bin\Debug\Web.UI.dll
+E:\WebSite\ChuangShiJi\CSJ\Web.UI\bin\Debug\Web.UI.pdb
+E:\WebSite\ChuangShiJi\CSJ\Web.UI\obj\Debug\Web.UI.dll
+E:\WebSite\ChuangShiJi\CSJ\Web.UI\obj\Debug\Web.UI.pdb
+E:\WebSite\ChuangShiJi\CSJ\Web.UI\bin\Debug\CSJ.Common.dll
+E:\WebSite\ChuangShiJi\CSJ\Web.UI\bin\Debug\OpenSmtp.dll
+E:\WebSite\ChuangShiJi\CSJ\Web.UI\bin\Debug\CSJ.Common.pdb

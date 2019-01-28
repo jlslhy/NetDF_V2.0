@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+    <link href="../../../Styles/css.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+    <script type="text/javascript" src="/js/JQPrototype.js" ></script>
+</head>
+<body>
+ <div  class="PageTitle" >
+            组织架构 >> 用户管理 >> 用户列表
+ </div>
+ <div title="搜索区">
+   <table class="searchtable">
+     <tr>
+       <th>用户名：</th><td> <input type="text" id="LoginID_Ipt"   /> </td>
+       <th>所属单位：</th><td> <input id="DepartmentID_Ipt" /> </td>
+       <td rowspan="3"  style="background-color:#F2F7FF; text-align:center;" >
+          <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'"  onclick="Search();" >查询</a>  
+       </td>
+     </tr>
+     <tr>
+       <th>用户姓名：</th>
+       <td colspan="3">
+       <input id="RealName_Ipt" class="easyui-validatebox"      />
+       </td>
+        
+     </tr>
+
+     
+     <tr>
+       <th>手机号码：</th><td>  <input id="Mobile_Ipt" name="Mobile_Ipt" /> </td>
+       <th>QQ号码：</th><td>   <input id="QQ_Ipt"    /> </td>
+     </tr>
+   </table>
+ </div>
+ <table id="dg"></table>  
+ <div id="DivPager" style="background:#efefef;border:1px solid #ccc; margin-top:2px;"></div> 
+  
+ 
+</body>
+</html>
+
+
+
+<script type="text/javascript">
+    VerGlobal = Date();
+    BaseUrl = "/DataAccess/UsersTBL/GetData.ashx?m=GetDataList";
+    CurrentRequestDataUrl = "";
+    CurrentCondition = "";
+</script>
+<script type="text/javascript">
+    /*************************  控件初始化 Start  ***************************/
+
+    $('#DepartmentID_Ipt').combotree({
+        url: '/DataAccess/DepartmentTBL/GetData.ashx?m=GetAllJsonTreeData',
+        width: 200
+    });
+    /*************************  控件初始化 End  ***************************/
+</script>
+
+ 
+<script type="text/javascript">
+    $('#DivPager').pagination({
+        onSelectPage: function (pageNumber, pageSize) {
+            $(this).pagination('loading');
+            loadPageData(pageNumber, pageSize);
+            $(this).pagination('loaded');
+        }
+    });
+    $('#DivPager').pagination({
+        onRefresh: function (pageNumber, pageSize) {
+            VerGlobal = Date();
+            $(this).pagination('loading');
+            CurrentRequestDataUrl += "&Ver=" + Date();
+            loadData(CurrentRequestDataUrl);
+            $(this).pagination('loaded');
+        }
+    });
+
+
+
+
+
+
+
+    // 加载数据
+    function loadData(targetUrl) {
+        $.ajax({
+            type: "Get",
+            url: targetUrl + "&VerGlobal=" + VerGlobal,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+                    ////////////////////// 绑定数据Start  ////////////////////
+                    var rows = JsonResult.rows;
+                    if (rows) {
+
+                        $('#dg').datagrid({
+                            data: rows,
+                            columns: [[
+                                        { field: 'RealName', title: '用户姓名' },
+                                        { field: 'LoginID', title: '用户名' },
+                                        { field: 'DepartmentID', title: '所属部门', formatter: formatDepartmentID },
+                                        { field: 'Mobile', title: '手机号码' },
+                                        { field: "Email", title: '电子邮箱' },
+                                        { field: "QQ", title: 'QQ号码' },
+                                        { field: "UserID", title: '操作', formatter: formatEdit } 
+                                     ]]
+                        });
+
+                    } else {
+                        alert("对不起，没数据！");
+
+                        $('#dg').datagrid({
+                            data: []
+
+                        });
+                    }
+                    //// -------------------------------------- //////
+
+                    if (JsonResult.total) {
+                        $('#DivPager').pagination({
+                            total: JsonResult.total
+                        });
+                    }
+
+                    //////////////////// 绑定数据End  ///////////////
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                    $('#dg').datagrid({
+                        data: []
+                    });
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+  
+    function formatEdit(val, row) {
+        return "<a href='UsersOperate.htm?id=" + val + "&showbackbtn=true'>编辑</a> <a href='javascript:DeleteByID(" + val + ");' onclick='return confirm(\"真的要删除？\");'>删除</a>";
+
+    }
+    function formatDepartmentID(val, row) {
+        var v = "";
+        v = $.ajax({
+            url: "/DataAccess/DepartmentTBL/GetData.ashx?m=GetDeptName&id=" + val,
+            async: false
+        }).responseText;
+        return v;
+    }
+
+
+    // 加载首页数据
+    function loadFirstPage() {
+        var tempurl = BaseUrl + "&selecttypename=firstpage&pagesize=" + $('#DivPager').pagination('options').pageSize + GetCondition(true);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+
+        $('#DivPager').pagination({
+            pageNumber: 1
+        });
+
+
+
+
+    }
+
+    // 加载指定页数据
+    function loadPageData(pageNumber, pageSize) {
+        var tempurl = BaseUrl + "&selecttypename=gotopage&page=" + pageNumber + "&pagesize=" + pageSize + GetCondition(false);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+    }
+    function GetCondition(refresh) {
+        if (refresh) {
+            CurrentCondition = "";
+            if ($('#LoginID_Ipt').val() != "") {
+
+                CurrentCondition += "&s_LoginID=" + escape($('#LoginID_Ipt').val());
+            }
+            if ($("#DepartmentID_Ipt").combo('getValue') != "") {
+                CurrentCondition += "&s_DepartmentID=" + $("#DepartmentID_Ipt").combo('getValue');
+            }
+            if ($("#RealName_Ipt").val() != "") {
+
+                CurrentCondition += "&s_RealName_Like=" + $("#RealName_Ipt").val();
+            }
+            if ($("#Mobile_Ipt").val() != "") {
+
+                CurrentCondition += "&s_Mobile=" + $("#Mobile_Ipt").val();
+            }
+
+            if ($("#QQ_Ipt").val() != "") {
+
+                CurrentCondition += "&s_QQ=" + $("#QQ_Ipt").val();
+            }
+ 
+        }
+        return CurrentCondition;
+    }
+
+
+    function OpenEditWin(id) {
+
+    }
+    function DeleteByID(id) {
+        var dataStr = "m=DeleteByID&id=" + id + "&ver=" + Date();
+        $.ajax({
+            type: "Get",
+            url: "/DataAccess/UsersTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+
+                    alert(JsonResult.ReturnMessage);
+                    VerGlobal = Date();
+                    loadData(CurrentRequestDataUrl);
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+    }
+
+    function Search() {
+        VerGlobal = Date();
+        loadFirstPage();
+    }
+    
+
+</script>
+<script type="text/javascript">
+    loadFirstPage();
+</script>
+
+

@@ -1,0 +1,303 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+<link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+<script type="text/javascript" src="/js/JQPrototype.js"></script>
+<script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+  <div>
+        <!-- 导航标题 Start -->
+        <div   class="PageTitle"  >
+            流程设计 >> 流程管理 >> 添加流程 >> <label id="PageTitleLabel" style=" color:green; font-weight:bold;">添加记录</label>
+        </div>
+		
+        <!-- 导航标题 End -->
+        <div title="表单区">
+          <form id="Form1" name="Form1" action="" >
+            <!-- 隐藏字段域 Start -->
+            <input id="RecordIDHid" type="hidden" value="" />
+            <!-- 隐藏字段域 End -->
+             
+            <div title="body">
+                <table class="formtable" >
+                  <tr>  
+                    <th>工作流标识：</th>
+                    <td>
+                    <input id="WorkFlowID_NumberBox"  class="easyui-numberbox"   />
+					<a href="javascript:SetCode_NumberAutoAdd('WorkFlowID_NumberBox', 'WF_WorkFlow_WorkFlowID');" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">刷新</a>
+                    </td>  
+                    <th>工作流名称：</th>
+                    <td>
+                    <input id="WorkFlowName_Input" name="WorkFlowName_Input" class="easyui-validatebox"  type="text"  />  
+					
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>备注：</th>
+                    <td>
+                    <input id="Remark_Input" name="Remark_Input" class="easyui-validatebox"  type="text"    />  
+					
+                    </td>  
+                    <th>创建时间：</th>
+                    <td>
+                    <input id="CreateTime_DateTimeBox"  class="easyui-datetimebox"   style="width:150px" />
+					
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>流程管理员：</th>
+                    <td>
+                    <input id="WFAdministrator_Input" name="WFAdministrator_Input" class="easyui-validatebox"  type="text"    />  
+					
+                    </td>  
+                    <th>是否启用：</th>
+                    <td> 
+                    <input id="Enabled_CheckBox"  type="checkbox" /> 
+                    
+                    </td>
+                  </tr>
+                </table>
+            </div>
+          </form>
+        </div>
+        <div title="操作区">
+        <a id="saveBtn" href="javascript:Save();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存</a>  
+        <a id="saveAndClearBtn" href="javascript:SaveDataAndClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存并清空</a>
+        <a id="clearBtn" href="javascript:ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="return confirm('真的要清空？');" >清空</a> 
+        <a id="backBtn" href="javascript:history.back();" class="easyui-linkbutton" data-options="iconCls:'icon-back'"  style="display:none;" >返回</a>
+        </div>
+
+   </div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+    // 检测是否在线
+    CheckUpLoginState();
+    /*************************  控件初始化 Start  ***************************/
+ 
+    if (location.href.indexOf("&showbackbtn=true") > 0 || location.href.indexOf("?showbackbtn=true") > 0) {
+        $("#backBtn").show();
+        $("#saveAndClearBtn").hide();
+    }
+    
+    /*************************  控件初始化 End  ***************************/
+	
+</script>
+
+<script type="text/javascript">
+    /************************* 页面初始化与表单的数据绑定 Start ****************************/
+    function LoadDataAndFillForm() {
+
+        var ID = encodeURIComponent($("#RecordIDHid").val());
+        var dataStr = "ID=" + ID;
+        dataStr += "&m=GetJsonDataByID";
+        dataStr += "&Ver=" + new Date().getMilliseconds();
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/WF_WorkFlowTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+
+
+                if (JsonResult.IsSuccess) {
+
+                    // 成功
+                    var data = JsonResult.Data;
+                    if (data.ID == "0") {
+                        data.ID = "";
+                    }
+                    if (data) {
+						
+                        $("#WorkFlowID_NumberBox").val(data.WorkFlowID);
+						
+                        $("#WorkFlowName_Input").val(data.WorkFlowName);
+						
+                        $("#Remark_Input").val(data.Remark);
+						
+						$('#CreateTime_DateTimeBox').datetimebox('setValue',data.CreateTime);
+						
+                        $("#WFAdministrator_Input").val(data.WFAdministrator);
+						 
+						if (data.Enabled == "True") {
+                            $("#Enabled_CheckBox").attr("checked", "checked");
+                        }else {
+                            $("#Enabled_CheckBox").removeAttr("checked");
+                        }  
+						
+                    } else {
+                        alert("对不起，没数据！");
+                    }
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+    /************************* 页面初始化与表单的数据绑定 End ****************************/  
+</script>
+
+<script type="text/javascript">
+    /******************  数据有效性验证 Start ********************/
+    function Validate() {
+	
+        if (!$('#WorkFlowID_NumberBox').numberbox("isValid"))
+        {
+           alert("工作流标识填写的数据没通过验证。");
+           $('#WorkFlowID_NumberBox').focus();
+           return false;
+        }
+        if (IsExist("/DataAccess/WF_WorkFlowTBL/OperateData.ashx", "WorkFlowID", $("#WorkFlowID_NumberBox").val(), $("#RecordIDHid").val()))
+        {
+            alert("此工作流标识已经存在,请重新修改。");
+            return false;
+        }
+        if (!$('#WorkFlowName_Input').validatebox("isValid"))
+        {
+           alert("工作流名称填写的数据没通过验证。");
+           $('#WorkFlowName_Input').focus();
+           return false;
+        }
+        if (!$('#Remark_Input').validatebox("isValid"))
+        {
+           alert("备注填写的数据没通过验证。");
+           $('#Remark_Input').focus();
+           return false;
+        }
+        if (!$('#CreateTime_DateTimeBox').datetimebox("isValid"))
+        {
+           alert("创建时间填写的数据没通过验证。");
+           $('#CreateTime_DateTimeBox').focus();
+           return false;
+        }
+        if (!$('#WFAdministrator_Input').validatebox("isValid"))
+        {
+           alert("流程管理员填写的数据没通过验证。");
+           $('#WFAdministrator_Input').focus();
+           return false;
+        }
+        return true;
+    }
+
+    /******************  数据有效性验证 End ********************/
+
+
+
+
+    /******************* 保存数据（添加或者修改） Start ******************/
+    function SaveData() {
+
+        if (!Validate()) {
+            return;
+        }
+		var IsOK = false;
+        /***************  获取表单数据信息 Start  ******************/
+
+        var ID = escape($("#RecordIDHid").val()); // 注意：这里统一用ID这个命名
+		
+        var WorkFlowID = escape($("#WorkFlowID_NumberBox").val());
+		
+        var WorkFlowName = escape($("#WorkFlowName_Input").val());
+		
+        var Remark = escape($("#Remark_Input").val());
+		
+        var CreateTime =$('#CreateTime_DateTimeBox').datetimebox('getValue');
+		
+        var WFAdministrator = escape($("#WFAdministrator_Input").val());
+		 
+        var Enabled = $("#Enabled_CheckBox")[0].checked;
+		
+
+        var dataStr = "ID=" + ID;
+		
+        dataStr += "&WorkFlowID=" + WorkFlowID;
+ 		
+        dataStr += "&WorkFlowName=" + WorkFlowName;
+ 		
+        dataStr += "&Remark=" + Remark;
+ 		
+        dataStr += "&CreateTime=" + CreateTime;
+ 		
+        dataStr += "&WFAdministrator=" + WFAdministrator;
+ 		
+        dataStr += "&Enabled=" + Enabled;
+ 		
+   
+        /***************  获取表单数据信息 End  ******************/
+		
+        /********************  向服务器端请求 Start  ************************/
+		$.ajaxSettings.async = false;
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/WF_WorkFlowTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+				    IsOK = true;
+                    // 成功
+                    alert(JsonResult.ReturnMessage);
+                } else {
+				    IsOK = false;
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+		$.ajaxSettings.async = true;
+        return IsOK;
+        /********************  向服务器端请求 End  ************************/
+
+    }
+
+    /******************* 保存数据（添加或者修改） End ******************/
+
+    // 重置表单数据
+    function ClearForm() {
+        $("#Form1")[0].reset();
+    }
+	function SaveDataAndClearForm()
+    {
+        if (SaveData()) {
+            ClearForm();
+        } else {
+             
+        }
+    }
+	function Save() {
+        if (SaveData()) {
+
+        }
+    }
+</script>
+<script type="text/javascript">
+    $(window).load(function () {
+      if (UrlHasParam(window.location.href, "id")) {
+        $("#RecordIDHid").val(ReqStr(window.location.href, "id"));
+        $("#PageTitleLabel").html("编辑记录");
+        LoadDataAndFillForm();
+      }
+      
+      /*************************  默认值 Start  ***************************/
+      if (IsAdd()) {
+        SetCode_NumberAutoAdd("WorkFlowID_NumberBox", "WF_WorkFlow_WorkFlowID");
+      }
+      /*************************  默认值 End  ***************************/
+    });
+</script>

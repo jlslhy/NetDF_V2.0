@@ -1,0 +1,337 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+    <link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+    <script type="text/javascript" src="/js/JQPrototype.js" ></script>
+	<script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+ <div  class="PageTitle" >
+       系统管理 >> 附件下载
+ </div>
+ <div title="搜索区">
+   <table class="searchtable">
+ 
+       
+                  <tr>
+				  
+                    <th>文件名：</th>
+					<td> 
+					
+					<input id="FileName_Ipt"  />  
+					
+					</td>
+				  
+                    <th>后缀名：</th>
+					<td> 
+					
+					<input id="Fix_Ipt"  />  
+					
+					</td>
+				
+                  </tr>
+			
+                  <tr>
+				  
+                    <th>描述：</th>
+					<td> 
+					
+					<input id="Description_Ipt"  />  
+					
+					</td>
+				  
+                    <th>上传者 会员 ：</th>
+					<td> 
+					
+					<input id="MemberUpLoader_Ipt"  />  
+					
+					</td>
+				
+                  </tr>
+			
+                  <tr>
+				  
+                    <th>上传者 系统管理员 ：</th>
+					<td> 
+					
+					<input id="UserUploader_Ipt"  />  
+					
+					</td>
+				
+                  </tr>
+			
+ 
+	 <tr>
+	   <th> </th>
+	   <td style=" text-align:left;" colspan="4" >
+          <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'"  onclick="Search();" >查询</a>  
+       </td>
+	 </tr>
+     
+   </table>
+ </div>
+ <table id="dg"></table>  
+ <div id="DivPager" style="background:#efefef;border:1px solid #ccc; margin-top:2px;"></div> 
+  
+ 
+</body>
+</html>
+
+
+
+<script type="text/javascript">
+    VerGlobal = Date();
+    BaseUrl = "/DataAccess/AttachmentTBL/GetData.ashx?m=GetDataList";
+    CurrentRequestDataUrl = "";
+    CurrentCondition = "";
+</script>
+<script type="text/javascript">
+    /*************************  控件初始化 Start  ***************************/
+
+    /*
+    $('#PDepartmentID_Ipt').combotree({
+        url: '/DataAccess/AttachmentTBL/GetData.ashx?m=GetAllJsonTreeData',
+        width: 200
+    });
+	*/
+
+
+    /*************************  控件初始化 End  ***************************/
+</script>
+
+ 
+<script type="text/javascript">
+    $('#DivPager').pagination({
+        onSelectPage: function (pageNumber, pageSize) {
+            $(this).pagination('loading');
+            loadPageData(pageNumber, pageSize);
+            $(this).pagination('loaded');
+        }
+    });
+    $('#DivPager').pagination({
+        onRefresh: function (pageNumber, pageSize) {
+            VerGlobal = Date();
+            $(this).pagination('loading');
+            CurrentRequestDataUrl += "&Ver=" + Date();
+            loadData(CurrentRequestDataUrl);
+            $(this).pagination('loaded');
+        }
+    });
+
+
+
+    // 加载数据
+    function loadData(targetUrl) {
+        $.ajax({
+            type: "Get",
+            url: targetUrl + "&VerGlobal=" + VerGlobal,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+                    ////////////////////// 绑定数据Start  ////////////////////
+                    var rows = JsonResult.rows;
+                    if (rows) {
+
+                        $('#dg').datagrid({
+                            data: rows,
+                            columns: [[
+
+							{ field: 'AttachID', title: '序号' },
+
+							{ field: 'BatchGUID', title: '批次GUID' },
+
+							{ field: 'FileName', title: '文件名' },
+
+							{ field: 'Fix', title: '后缀名' },
+
+							{ field: 'FileSize', title: '文件大小，单位为字节' },
+
+							{ field: 'Description', title: '描述' },
+
+                            { field: 'DownloadCount', title: '下载次数 ' },
+
+							{ field: 'MemberUpLoader', title: '上传者 会员 ' },
+
+							{ field: 'UserUploader', title: '上传者 系统管理员 ' },
+
+                            { field: " ", title: '操作', formatter: formatEdit }
+                            ]]
+                        });
+
+                    } else {
+                        alert("对不起，没数据！");
+
+                        $('#dg').datagrid({
+                            data: []
+
+                        });
+                    }
+                    //// -------------------------------------- //////
+
+                    if (JsonResult.total) {
+                        $('#DivPager').pagination({
+                            total: JsonResult.total
+                        });
+                    }
+
+                    //////////////////// 绑定数据End  ///////////////
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                    $('#dg').datagrid({
+                        data: []
+                    });
+                    if (JsonResult.ReturnTitle == "Login") {
+                        ToReLogin();
+                    }
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+
+    function formatEdit(val, row, index) {
+        return "<a href='/UploadFiles/" + row.FileName + "' target='_blank'>下载</a> <a href='javascript:DeleteByID(" + row.AttachID + ");' onclick='return confirm(\"真的要删除？\");'>删除</a>";
+
+    }
+
+    function formatIsEnabled(val, row) {
+        if (val) {
+            return "<font color='green'><b>是</b></font>";
+        } else {
+            return "<font color='gray'>否</font>";
+        }
+    }
+
+
+
+
+
+
+    // 加载首页数据
+    function loadFirstPage() {
+        var tempurl = BaseUrl + "&selecttypename=firstpage&pagesize=" + $('#DivPager').pagination('options').pageSize + GetCondition(true);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+
+        $('#DivPager').pagination({
+            pageNumber: 1
+        });
+
+
+
+
+    }
+
+    // 加载指定页数据
+    function loadPageData(pageNumber, pageSize) {
+        var tempurl = BaseUrl + "&selecttypename=gotopage&page=" + pageNumber + "&pagesize=" + pageSize + GetCondition(false);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+    }
+    function GetCondition(refresh) {
+        if (refresh) {
+            CurrentCondition = "";
+            if (UrlHasParam(window.location.href, "BatchGUID")) {
+                CurrentCondition = "&s_BatchGUID=" + ReqStr(window.location.href, "BatchGUID");
+            }
+
+
+
+            if ($('#FileName_Ipt').val() != "") {
+                CurrentCondition += "&s_FileName=" + escape($('#FileName_Ipt').val());
+            }
+
+
+
+
+
+            if ($('#Fix_Ipt').val() != "") {
+                CurrentCondition += "&s_Fix=" + escape($('#Fix_Ipt').val());
+            }
+
+
+
+
+
+            if ($('#Description_Ipt').val() != "") {
+                CurrentCondition += "&s_Description=" + escape($('#Description_Ipt').val());
+            }
+
+
+
+
+
+            if ($('#MemberUpLoader_Ipt').val() != "") {
+                CurrentCondition += "&s_MemberUpLoader=" + escape($('#MemberUpLoader_Ipt').val());
+            }
+
+
+
+
+
+            if ($('#UserUploader_Ipt').val() != "") {
+                CurrentCondition += "&s_UserUploader=" + escape($('#UserUploader_Ipt').val());
+            }
+
+
+
+
+        }
+        return CurrentCondition;
+    }
+
+
+    function OpenEditWin(id) {
+
+    }
+    function DeleteByID(id) {
+        var dataStr = "m=DeleteByID&id=" + id + "&ver=" + Date();
+        $.ajax({
+            type: "Get",
+            url: "/DataAccess/AttachmentTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+
+                    alert(JsonResult.ReturnMessage);
+                    VerGlobal = Date();
+                    loadData(CurrentRequestDataUrl);
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+    }
+
+    function Search() {
+        VerGlobal = Date();
+        loadFirstPage();
+    }
+
+
+</script>
+<script type="text/javascript">
+    loadFirstPage();
+  //  alert(ReqStr(window.location.href, "AttachGUID"));
+</script>
+
+

@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+        <link href="../../../UIFramkwork/ext-2.0.2/resources/css/ext-all.css" rel="stylesheet"
+        type="text/css" />
+    <script src="../../../UIFramkwork/ext-2.0.2/adapter/ext/ext-base.js" type="text/javascript"></script>
+    <script src="../../../UIFramkwork/ext-2.0.2/ext-all.js" type="text/javascript"></script>
+     <style type="text/css">
+       
+    </style>
+</head>
+<body>
+ 
+</body>
+<script type="text/javascript">
+    Ext.onReady(function () {
+        var citys = [
+        [1, "霞山"],
+        [2, "赤坎"],
+        [3, "开发区"],
+        [4, "坡头"],
+        [5, "麻章"]
+        ];
+
+        var proxy1 = new Ext.data.MemoryProxy(citys);
+
+        var City = Ext.data.Record.create([
+        { name: "cid", type: "int", mapping: 0 },
+            { name: "cname", type: "string", mapping: 1 }
+        ]);
+
+        var reader1 = Ext.data.ArrayReader({}, City);
+
+//        var reader = Ext.data.ArrayReader({}, [
+//            { name: "cid", type: "int", mapping: 0 },
+//            { name: "cname", type: "string", mapping: 1 }
+//        ]);
+
+        var store1 = new Ext.data.Store({
+            proxy: proxy1,
+            reader: reader1,
+            autoLoad:true 
+        });
+
+
+        var combobox = new Ext.form.ComboBox({
+            renderTo: Ext.getBody(),
+            triggerAction: "all",
+            store: store1,
+            displayField: "cname",
+            valueField: "cid", 
+            mode: "remote",
+            emptyText: "请选择城市"
+
+        });
+
+
+        var btn = new Ext.Button({
+            renderTo: Ext.getBody(),
+            text: "确定",
+            handler: function () {
+                Ext.Msg.alert("值", "值：" + combobox.getValue() + ",显示值：" + combobox.getRawValue());
+            }
+        });
+
+
+
+
+    });
+</script>
+      
+</html>

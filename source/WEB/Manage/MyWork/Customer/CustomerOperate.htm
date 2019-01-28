@@ -1,0 +1,595 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+<link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+<script type="text/javascript" src="/js/JQPrototype.js"></script>
+<script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+  <div>
+        <!-- 导航标题 Start -->
+        <div   class="PageTitle"  >
+            客户管理 >> 新建客户 >> <label id="PageTitleLabel" style=" color:green; font-weight:bold;">添加记录</label>
+        </div>
+		
+        <!-- 导航标题 End -->
+        <div title="表单区">
+          <form id="Form1" name="Form1" action="" >
+            <!-- 隐藏字段域 Start -->
+            <input id="RecordIDHid" type="hidden" value="" />
+            <!-- 隐藏字段域 End -->
+             
+            <div title="body">
+                <table class="formtable" >
+                  <tr>  
+                    <th>客户编码：</th>
+                    <td>
+                    <input id="CustomerCode_NumberBox"  class="easyui-numberbox" style=""  data-options=""     /><a href="javascript:SetCode_NumberAutoAdd('CustomerCode_NumberBox', 'Customer_CustomerCode');" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">刷新</a>
+                    </td>  
+                    <th>客户名称：</th>
+                    <td>
+                    <input id="CustomerName_Input" name="CustomerName_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>客户类型：</th>
+                    <td>
+                    <input  
+                    id="CustomerType_ComboBox"
+                    name="CustomerType_ComboBox"
+                    class="easyui-combobox"
+                    data-options="
+                    url:'/DataAccess/DataDictionaryTBL/GetData_Extend.ashx?m=GetJsonDataByCategoryCode&CategoryCode=CustomerType'
+                    ,valueField:'DataValue'
+                    ,textField:'DataKey'
+                    ,panelHeight:'auto'
+                    " />
+                    </td>  
+                    <th>客户所有人：</th>
+                    <td>
+                    <input id="CustomerOwner_Input" name="CustomerOwner_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>所属区域：</th>
+                    <td>
+                    <input id="Region_Input" name="Region_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>联系人：</th>
+                    <td>
+                    <input id="Contact_Input" name="Contact_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>公司电话：</th>
+                    <td>
+                    <input id="CompanyTel_Input" name="CompanyTel_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>手机：</th>
+                    <td>
+                    <input id="MobilePhone_Input" name="MobilePhone_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>QQ号码：</th>
+                    <td>
+                    <input id="QQ_Input" name="QQ_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>电子邮箱：</th>
+                    <td>
+                    <input id="EMail_Input" name="EMail_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>跟单内容：</th>
+                    <td>
+                    <input id="DocumentaryContent_Input" name="DocumentaryContent_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>备注：</th>
+                    <td>
+                    <input id="Remarks_Input" name="Remarks_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>所属行业：</th>
+                    <td>
+                    <input id="WorkingField_Input" name="WorkingField_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>客户级别：</th>
+                    <td>
+                    <input id="CustomerLevel_Input" name="CustomerLevel_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>地址：</th>
+                    <td>
+                    <input id="Address_Input" name="Address_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>公司网址：</th>
+                    <td>
+                    <input id="CompanyWebsite_Input" name="CompanyWebsite_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>微博：</th>
+                    <td>
+                    <input id="MicroBlog_Input" name="MicroBlog_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>公众号：</th>
+                    <td>
+                    <input id="OfficialAccounts_Input" name="OfficialAccounts_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>注册资本：</th>
+                    <td>
+                    <input id="RegisteredCapital_Input" name="RegisteredCapital_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>公司简介：</th>
+                    <td>
+                    <input id="CompanyIntroduction_Input" name="CompanyIntroduction_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>总人数：</th>
+                    <td>
+                    <input id="TotalStaff_NumberBox"  class="easyui-numberbox" style=""  data-options=""     />
+                    </td>  
+                    <th>销售额：</th>
+                    <td>
+                    <input id="Sales_NumberBox"  class="easyui-numberbox" style=""  data-options=""     />
+                    
+                    </td>
+                  </tr>
+                </table>
+            </div>
+          </form>
+        </div>
+        <div title="操作区">
+        <a id="saveBtn" href="javascript:Save();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存</a>  
+        <a id="saveAndClearBtn" href="javascript:SaveDataAndClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存并清空</a>
+        <a id="clearBtn" href="javascript:ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="return confirm('真的要清空？');" >清空</a> 
+        <a id="backBtn" href="javascript:history.back();" class="easyui-linkbutton" data-options="iconCls:'icon-back'"  style="display:none;" >返回</a>
+        </div>
+
+   </div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+    // 检测是否在线
+    CheckUpLoginState();
+    /*************************  控件初始化 Start  ***************************/
+ 
+    if (location.href.indexOf("&showbackbtn=true") > 0 || location.href.indexOf("?showbackbtn=true") > 0) {
+        $("#backBtn").show();
+        $("#saveAndClearBtn").hide();
+    }
+    
+
+	
+    /*************************  控件初始化 End  ***************************/
+	
+</script>
+
+<script type="text/javascript">
+    /************************* 页面初始化与表单的数据绑定 Start ****************************/
+    function LoadDataAndFillForm() {
+
+        var ID = encodeURIComponent($("#RecordIDHid").val());
+        var dataStr = "ID=" + ID;
+        dataStr += "&m=GetJsonDataByID";
+        dataStr += "&Ver=" + new Date().getMilliseconds();
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/CustomerTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+
+
+                if (JsonResult.IsSuccess) {
+
+                    // 成功
+                    var data = JsonResult.Data;
+                    if (data.ID == "0") {
+                        data.ID = "";
+                    }
+                    if (data) {
+						
+                        $("#CustomerCode_NumberBox").val(data.CustomerCode);
+						
+                        $("#CustomerName_Input").val(data.CustomerName);
+						
+                        $('#CustomerType_ComboBox').combobox('setValue',data.CustomerType);
+
+                        $("#CustomerOwner_Input").val(data.CustomerOwner);
+						
+                        $("#Region_Input").val(data.Region);
+						
+                        $("#Contact_Input").val(data.Contact);
+						
+                        $("#CompanyTel_Input").val(data.CompanyTel);
+						
+                        $("#MobilePhone_Input").val(data.MobilePhone);
+						
+                        $("#QQ_Input").val(data.QQ);
+						
+                        $("#EMail_Input").val(data.EMail);
+						
+                        $("#DocumentaryContent_Input").val(data.DocumentaryContent);
+						
+                        $("#Remarks_Input").val(data.Remarks);
+						
+                        $("#WorkingField_Input").val(data.WorkingField);
+						
+                        $("#CustomerLevel_Input").val(data.CustomerLevel);
+						
+                        $("#Address_Input").val(data.Address);
+						
+                        $("#CompanyWebsite_Input").val(data.CompanyWebsite);
+						
+                        $("#MicroBlog_Input").val(data.MicroBlog);
+						
+                        $("#OfficialAccounts_Input").val(data.OfficialAccounts);
+						
+                        $("#RegisteredCapital_Input").val(data.RegisteredCapital);
+						
+                        $("#CompanyIntroduction_Input").val(data.CompanyIntroduction);
+						
+                        $("#TotalStaff_NumberBox").val(data.TotalStaff);
+						
+                        $("#Sales_NumberBox").val(data.Sales);
+						
+                    } else {
+                        alert("对不起，没数据！");
+                    }
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+
+	
+    /************************* 页面初始化与表单的数据绑定 End ****************************/  
+</script>
+
+<script type="text/javascript">
+    /******************  数据有效性验证 Start ********************/
+    function Validate() {
+	
+        if (!$('#CustomerCode_NumberBox').numberbox("isValid"))
+        {
+           alert("客户编码填写的数据没通过验证。");
+           $('#CustomerCode_NumberBox').focus();
+           return false;
+        }
+        if (IsExist("/DataAccess/CustomerTBL/OperateData.ashx", "CustomerCode", $("#CustomerCode_NumberBox").val(), $("#RecordIDHid").val()))
+        {
+            alert("此客户编码已经存在,请重新修改。");
+            return false;
+        }
+        if (!$('#CustomerName_Input').validatebox("isValid"))
+        {
+           alert("客户名称填写的数据没通过验证。");
+           $('#CustomerName_Input').focus();
+           return false;
+        }
+        if (!$('#CustomerType_ComboBox').combobox("isValid"))
+        {
+           alert("客户类型填写的数据没通过验证。");
+           $('#CustomerType_ComboBox').focus();
+           return false;
+        }
+        if (!$('#CustomerOwner_Input').validatebox("isValid"))
+        {
+           alert("客户所有人填写的数据没通过验证。");
+           $('#CustomerOwner_Input').focus();
+           return false;
+        }
+        if (!$('#Region_Input').validatebox("isValid"))
+        {
+           alert("所属区域填写的数据没通过验证。");
+           $('#Region_Input').focus();
+           return false;
+        }
+        if (!$('#Contact_Input').validatebox("isValid"))
+        {
+           alert("联系人填写的数据没通过验证。");
+           $('#Contact_Input').focus();
+           return false;
+        }
+        if (!$('#CompanyTel_Input').validatebox("isValid"))
+        {
+           alert("公司电话填写的数据没通过验证。");
+           $('#CompanyTel_Input').focus();
+           return false;
+        }
+        if (!$('#MobilePhone_Input').validatebox("isValid"))
+        {
+           alert("手机填写的数据没通过验证。");
+           $('#MobilePhone_Input').focus();
+           return false;
+        }
+        if (!$('#QQ_Input').validatebox("isValid"))
+        {
+           alert("QQ号码填写的数据没通过验证。");
+           $('#QQ_Input').focus();
+           return false;
+        }
+        if (!$('#EMail_Input').validatebox("isValid"))
+        {
+           alert("电子邮箱填写的数据没通过验证。");
+           $('#EMail_Input').focus();
+           return false;
+        }
+        if (!$('#DocumentaryContent_Input').validatebox("isValid"))
+        {
+           alert("跟单内容填写的数据没通过验证。");
+           $('#DocumentaryContent_Input').focus();
+           return false;
+        }
+        if (!$('#Remarks_Input').validatebox("isValid"))
+        {
+           alert("备注填写的数据没通过验证。");
+           $('#Remarks_Input').focus();
+           return false;
+        }
+        if (!$('#WorkingField_Input').validatebox("isValid"))
+        {
+           alert("所属行业填写的数据没通过验证。");
+           $('#WorkingField_Input').focus();
+           return false;
+        }
+        if (!$('#CustomerLevel_Input').validatebox("isValid"))
+        {
+           alert("客户级别填写的数据没通过验证。");
+           $('#CustomerLevel_Input').focus();
+           return false;
+        }
+        if (!$('#Address_Input').validatebox("isValid"))
+        {
+           alert("地址填写的数据没通过验证。");
+           $('#Address_Input').focus();
+           return false;
+        }
+        if (!$('#CompanyWebsite_Input').validatebox("isValid"))
+        {
+           alert("公司网址填写的数据没通过验证。");
+           $('#CompanyWebsite_Input').focus();
+           return false;
+        }
+        if (!$('#MicroBlog_Input').validatebox("isValid"))
+        {
+           alert("微博填写的数据没通过验证。");
+           $('#MicroBlog_Input').focus();
+           return false;
+        }
+        if (!$('#OfficialAccounts_Input').validatebox("isValid"))
+        {
+           alert("公众号填写的数据没通过验证。");
+           $('#OfficialAccounts_Input').focus();
+           return false;
+        }
+        if (!$('#RegisteredCapital_Input').validatebox("isValid"))
+        {
+           alert("注册资本填写的数据没通过验证。");
+           $('#RegisteredCapital_Input').focus();
+           return false;
+        }
+        if (!$('#CompanyIntroduction_Input').validatebox("isValid"))
+        {
+           alert("公司简介填写的数据没通过验证。");
+           $('#CompanyIntroduction_Input').focus();
+           return false;
+        }
+        if (!$('#TotalStaff_NumberBox').numberbox("isValid"))
+        {
+           alert("总人数填写的数据没通过验证。");
+           $('#TotalStaff_NumberBox').focus();
+           return false;
+        }
+        if (!$('#Sales_NumberBox').numberbox("isValid"))
+        {
+           alert("销售额填写的数据没通过验证。");
+           $('#Sales_NumberBox').focus();
+           return false;
+        }
+        return true;
+    }
+
+    /******************  数据有效性验证 End ********************/
+
+
+
+
+    /******************* 保存数据（添加或者修改） Start ******************/
+    function SaveData() {
+
+        if (!Validate()) {
+            return;
+        }
+		var IsOK = false;
+        /***************  获取表单数据信息 Start  ******************/
+
+        var ID = escape($("#RecordIDHid").val()); // 注意：这里统一用ID这个命名
+		
+        var CustomerCode = escape($("#CustomerCode_NumberBox").val());
+		
+        var CustomerName = escape($("#CustomerName_Input").val());
+		
+        var CustomerType = $('#CustomerType_ComboBox').combobox('getValue');
+        
+        var CustomerOwner = escape($("#CustomerOwner_Input").val());
+		
+        var Region = escape($("#Region_Input").val());
+		
+        var Contact = escape($("#Contact_Input").val());
+		
+        var CompanyTel = escape($("#CompanyTel_Input").val());
+		
+        var MobilePhone = escape($("#MobilePhone_Input").val());
+		
+        var QQ = escape($("#QQ_Input").val());
+		
+        var EMail = escape($("#EMail_Input").val());
+		
+        var DocumentaryContent = escape($("#DocumentaryContent_Input").val());
+		
+        var Remarks = escape($("#Remarks_Input").val());
+		
+        var WorkingField = escape($("#WorkingField_Input").val());
+		
+        var CustomerLevel = escape($("#CustomerLevel_Input").val());
+		
+        var Address = escape($("#Address_Input").val());
+		
+        var CompanyWebsite = escape($("#CompanyWebsite_Input").val());
+		
+        var MicroBlog = escape($("#MicroBlog_Input").val());
+		
+        var OfficialAccounts = escape($("#OfficialAccounts_Input").val());
+		
+        var RegisteredCapital = escape($("#RegisteredCapital_Input").val());
+		
+        var CompanyIntroduction = escape($("#CompanyIntroduction_Input").val());
+		
+        var TotalStaff = escape($("#TotalStaff_NumberBox").val());
+		
+        var Sales = escape($("#Sales_NumberBox").val());
+		
+
+        var dataStr = "ID=" + ID;
+		
+        dataStr += "&CustomerCode=" + CustomerCode;
+ 		
+        dataStr += "&CustomerName=" + CustomerName;
+ 		
+        dataStr += "&CustomerType=" + CustomerType;
+ 		
+        dataStr += "&CustomerOwner=" + CustomerOwner;
+ 		
+        dataStr += "&Region=" + Region;
+ 		
+        dataStr += "&Contact=" + Contact;
+ 		
+        dataStr += "&CompanyTel=" + CompanyTel;
+ 		
+        dataStr += "&MobilePhone=" + MobilePhone;
+ 		
+        dataStr += "&QQ=" + QQ;
+ 		
+        dataStr += "&EMail=" + EMail;
+ 		
+        dataStr += "&DocumentaryContent=" + DocumentaryContent;
+ 		
+        dataStr += "&Remarks=" + Remarks;
+ 		
+        dataStr += "&WorkingField=" + WorkingField;
+ 		
+        dataStr += "&CustomerLevel=" + CustomerLevel;
+ 		
+        dataStr += "&Address=" + Address;
+ 		
+        dataStr += "&CompanyWebsite=" + CompanyWebsite;
+ 		
+        dataStr += "&MicroBlog=" + MicroBlog;
+ 		
+        dataStr += "&OfficialAccounts=" + OfficialAccounts;
+ 		
+        dataStr += "&RegisteredCapital=" + RegisteredCapital;
+ 		
+        dataStr += "&CompanyIntroduction=" + CompanyIntroduction;
+ 		
+        dataStr += "&TotalStaff=" + TotalStaff;
+ 		
+        dataStr += "&Sales=" + Sales;
+ 		
+   
+        /***************  获取表单数据信息 End  ******************/
+		
+        /********************  向服务器端请求 Start  ************************/
+		$.ajaxSettings.async = false;
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/CustomerTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+				    IsOK = true;
+                    // 成功
+                    alert(JsonResult.ReturnMessage);
+                } else {
+				    IsOK = false;
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+		$.ajaxSettings.async = true;
+        return IsOK;
+        /********************  向服务器端请求 End  ************************/
+
+    }
+
+    /******************* 保存数据（添加或者修改） End ******************/
+
+    // 重置表单数据
+    function ClearForm() {
+        $("#Form1")[0].reset();
+    }
+	function SaveDataAndClearForm()
+    {
+        if (SaveData()) {
+            ClearForm();
+        } else {
+             
+        }
+    }
+	function Save() {
+        if (SaveData()) {
+
+        }
+    }
+</script>
+<script type="text/javascript">
+    $(window).load(function () {
+	  
+      if (UrlHasParam(window.location.href, "id")) {
+        $("#RecordIDHid").val(ReqStr(window.location.href, "id"));
+        $("#PageTitleLabel").html("编辑记录");
+		$.ajaxSettings.async = false;
+        LoadDataAndFillForm();
+		$.ajaxSettings.async = true;
+		
+      }
+      
+      /*************************  默认值 Start  ***************************/
+      if (IsAdd()) {
+                SetCode_NumberAutoAdd("CustomerCode_NumberBox", "Customer_CustomerCode");
+      }
+      /*************************  默认值 End  ***************************/
+	  
+    
+    
+    
+
+    });
+	
+</script>

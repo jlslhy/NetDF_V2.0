@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+    <link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+    <script type="text/javascript" src="/js/JQPrototype.js" ></script>
+    <script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+ <div  class="PageTitle" >
+       客户管理 >> 客户选择列表
+ </div>
+ 
+ <div title="搜索区">
+ <table class="searchtable">
+     <tr>  
+         <th>客户名称：</th>
+         <td>
+         <input id="CustomerName_Input"  />  
+         </td>  
+         <th>客户类型：</th>
+         <td>
+         <input id="CustomerType_Input"  />  
+         </td>
+     </tr>
+     
+     <tr>
+       <th> </th>
+       <td style=" text-align:left;" colspan="4" >
+          <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'"  onclick="Search();" >查询</a>  
+       </td>
+     </tr>
+   </table>
+ </div>
+ <div style="padding:5px;border:1px solid #ddd; margin-top:3px; margin-bottom:3px;">
+    <a href="javascript:SelectMore();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'" id="MultiSelect" style="display:none; width:50px;" >多选</a>
+ </div>
+ <table id="dg"></table>  
+ <div id="DivPager" style="background:#efefef;border:1px solid #ccc; margin-top:2px;"></div> 
+</body>
+</html>
+
+<script type="text/javascript">
+    VerGlobal = Date();
+    BaseUrl = "/DataAccess/CustomerTBL/GetData_Select.ashx?m=GetDataList";
+    CurrentRequestDataUrl = "";
+    CurrentCondition = "";
+	ValueField = "CustomerCode";
+    TextField = "CustomerName";
+    SelectedValue = "";
+    SelectedText = "";
+</script>
+<script type="text/javascript">
+    /*************************  控件初始化 Start  ***************************/
+    
+    
+    /*************************  控件初始化 End  ***************************/
+</script>
+
+<script type="text/javascript">
+     /************* 初始数据 Start ***************/
+    function GetDataKeyName(JsonDataRows,DataValue)
+    {
+         var temp = "";
+         for (var o in JsonDataRows) {
+             if (DataValue == JsonDataRows[o].DataValue) {
+                 temp = JsonDataRows[o].DataKey;
+             }
+         }
+         return temp;
+    }
+
+	$.ajaxSettings.async = false;
+
+    $.ajaxSettings.async = true;
+
+     /************* 初始数据 End ***************/
+</script>
+
+<script type="text/javascript">
+    $('#DivPager').pagination({
+        onSelectPage: function (pageNumber, pageSize) {
+            $(this).pagination('loading');
+            loadPageData(pageNumber, pageSize);
+            $(this).pagination('loaded');
+        }
+    });
+    $('#DivPager').pagination({
+        onRefresh: function (pageNumber, pageSize) {
+            VerGlobal = Date();
+            $(this).pagination('loading');
+            CurrentRequestDataUrl += "&Ver=" + Date();
+            loadData(CurrentRequestDataUrl);
+            $(this).pagination('loaded');
+        }
+    });
+
+    // 加载数据
+    function loadData(targetUrl) {
+        $.ajax({
+            type: "Get",
+            url: targetUrl + "&VerGlobal=" + VerGlobal,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+                    ////////////////////// 绑定数据Start  ////////////////////
+                    var rows = JsonResult.rows;
+                    if (rows) {
+
+                        $('#dg').datagrid({
+                            data: rows,
+                            rownumbers: true,
+                            columns: [[
+                                       { field: 'ck',checkbox: true },
+                                       
+                                       { field: 'ID', title: '' },
+                                       
+                                       { field: 'CustomerCode', title: '客户编码' },
+                                       
+                                       { field: 'CustomerName', title: '客户名称' },
+                                       
+                                       { field: 'CustomerType', title: '客户类型' },
+                                       
+                                       { field: 'CustomerOwner', title: '客户所有人' },
+                                       
+                                       { field: 'Region', title: '所属区域' },
+                                       
+                                       { field: 'Contact', title: '联系人' },
+                                       
+                                       { field: " ", title: '操作', formatter: formatSelect } 
+                                     ]]
+                        });
+                     } else {
+                             alert("对不起，没数据！");
+                             $('#dg').datagrid({
+                             data: []
+                             });
+                    }
+                    //// -------------------------------------- //////
+
+                    if (JsonResult.total) {
+                        $('#DivPager').pagination({
+                            total: JsonResult.total
+                        });
+                    }
+
+                    //////////////////// 绑定数据End  ///////////////
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                    $('#dg').datagrid({
+                        data: []
+                    });
+					if (JsonResult.ReturnTitle == "Login") {
+                        ToReLogin();
+                    }
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+    function formatSelect(val, row,index) {
+        return "<a href='javascript:SelectSingle(&quot;" + eval("row." + ValueField) + "&quot;,&quot;" + eval("row." + TextField) + "&quot;);'>选择</a>";
+    }
+	
+    function formatIsEnabled(val, row) {
+        if (val) {
+            return "<font color='green'><b>是</b></font>";
+        } else {
+            return "<font color='gray'>否</font>";
+        }
+    }
+ 
+    // 加载首页数据
+    function loadFirstPage() {
+        var tempurl = BaseUrl + "&selecttypename=firstpage&pagesize=" + $('#DivPager').pagination('options').pageSize + GetCondition(true);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+
+        $('#DivPager').pagination({
+            pageNumber: 1
+        });
+    }
+
+    // 加载指定页数据
+    function loadPageData(pageNumber, pageSize) {
+        var tempurl = BaseUrl + "&selecttypename=gotopage&page=" + pageNumber + "&pagesize=" + pageSize + GetCondition(false);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+    }
+    function GetCondition(refresh) {
+        if (refresh) {
+            CurrentCondition = "";
+            
+            if ($('#CustomerName_Input').val() != "") {
+                CurrentCondition += "&s_CustomerName=" + escape($('#CustomerName_Input').val());
+            }
+            
+            if ($('#CustomerType_Input').val() != "") {
+                CurrentCondition += "&s_CustomerType=" + escape($('#CustomerType_Input').val());
+            }
+            
+        }
+        return CurrentCondition;
+    }
+
+    function OpenEditWin(id) {
+
+    }
+     
+	 
+	// 获取所有已经选择的记录的ID值
+	function GetSelectedIDs() {
+        var checkedItems = $('#dg').datagrid('getChecked');
+        var ids = "";
+        $.each(checkedItems, function (index, item) {
+            if (index == 0) {
+                ids = item.ID;
+            }
+            else {
+                ids = ids + "," + item.ID;
+            }
+        });
+        return ids;
+    }
+
+	function GetSelectedValueAndText() {
+	    var checkedItems = $('#dg').datagrid('getChecked');
+	     
+	    $.each(checkedItems, function (index, item) {
+	        if (index == 0) {
+	            SelectedValue = eval("item." + ValueField);
+	            SelectedText = eval("item." + TextField);
+	        }
+	        else {
+	            SelectedValue = SelectedValue + "," + eval("item." + ValueField);
+	            SelectedText = SelectedText + "," + eval("item." + TextField);
+	        }
+	    });
+ 
+	}
+
+    function Search() {
+        VerGlobal = Date();
+        loadFirstPage();
+    }
+
+	function SelectMore() {
+        GetSelectedValueAndText();
+        ReturnValueAndText();
+    }
+    function SelectSingle(val,text) {
+        SelectedValue = val;
+        SelectedText = text;
+        ReturnValueAndText();
+    }
+
+    function ReturnValueAndText() {
+        var parentDocument = window.parent.document;
+        if (UrlHasParam(window.location.href, "OpenType")) {
+            if (ReqStr(window.location.href, "OpenType") == "iframe") {
+                parentDocument = window.parent.document;
+            } else if (ReqStr(window.location.href, "OpenType") == "newWindow") {
+                parentDocument = opener.document;
+            }
+        }
+
+        if (UrlHasParam(window.location.href, "RtnValueObj")) {
+
+            $("#" + ReqStr(window.location.href, "RtnValueObj"), parentDocument).val(SelectedValue);
+
+        }
+        if (UrlHasParam(window.location.href, "RtnHtmlObj")) {
+
+            $("#" + ReqStr(window.location.href, "RtnHtmlObj"), parentDocument).html(SelectedText);
+        }
+        window.close();
+        window.parent.frames.hideBox();
+    }
+
+</script>
+<script type="text/javascript">
+    $(window).load(function () {
+	
+        
+		if (UrlHasParam(window.location.href, "SelectType") && ReqStr(window.location.href, "SelectType") == "MultiSelect")
+        {
+            $("#MultiSelect").css("display", "block");
+        }
+		if (UrlHasParam(window.location.href, "ValueField"))
+		{
+		    ValueField = ReqStr(window.location.href, "ValueField");
+		}
+		if (UrlHasParam(window.location.href, "TextField"))
+		{
+		    TextField = ReqStr(window.location.href, "TextField");
+		}
+        loadFirstPage();
+    });
+</script>
+
+

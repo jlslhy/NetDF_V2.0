@@ -1,0 +1,334 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+    <link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+    <link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+    <script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+    <script type="text/javascript" src="/js/JQPrototype.js" ></script>
+    <script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+ <div  class="PageTitle" >
+       流程节点管理 >> 节点列表
+ </div>
+ 
+ <div title="搜索区">
+ <table class="searchtable">
+     <tr>  
+         <th>节点标识：</th>
+         <td>
+         <input  id="NodeID_NumberBox"  class="easyui-numberbox"   /> 
+         </td>  
+         <th>节点标记：</th>
+         <td>
+         <input id="NodeFlag_Input"  />  
+         </td>
+     </tr>
+     
+     <tr>  
+         <th>节点名称：</th>
+         <td>
+         <input id="NodeName_Input"  />  
+         </td>  
+         <th>所属工作流程标识：</th>
+         <td>
+         <input  id="WorkFlowID_NumberBox"  class="easyui-numberbox"   /> 
+         </td>
+     </tr>
+     
+     <tr>
+       <th> </th>
+       <td style=" text-align:left;" colspan="4" >
+          <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'"  onclick="Search();" >查询</a>  
+       </td>
+     </tr>
+   </table>
+ </div>
+ <div style="padding:5px;border:1px solid #ddd; margin-top:3px; margin-bottom:3px;">
+    <a href="WF_NodeOperate.htm?showbackbtn=true" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'" >添加</a>
+	<a href="javascript:DeleteByIDs();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
+ </div>
+ <table id="dg"></table>  
+ <div id="DivPager" style="background:#efefef;border:1px solid #ccc; margin-top:2px;"></div> 
+</body>
+</html>
+
+<script type="text/javascript">
+    VerGlobal = Date();
+    BaseUrl = "/DataAccess/WF_NodeTBL/GetData.ashx?m=GetDataList";
+    CurrentRequestDataUrl = "";
+    CurrentCondition = "";
+</script>
+<script type="text/javascript">
+    /*************************  控件初始化 Start  ***************************/
+    
+    
+    /*************************  控件初始化 End  ***************************/
+</script>
+
+<script type="text/javascript">
+     /************* 初始数据 Start ***************/
+	$.ajaxSettings.async = false;
+    JsonData_WF_WorkFlow_WorkFlowID = JSON.parse("[]");
+    $.ajaxSettings.async = true;
+    function GetDataKeyName(JsonDataRows, DataValue)
+    {
+         var temp = "";
+         for (var o in JsonDataRows) {
+             if (DataValue == JsonDataRows[o].DataValue) {
+                 temp = JsonDataRows[o].DataKey;
+             }
+         }
+         return temp;
+    }
+     /************* 初始数据 End ***************/
+</script>
+
+<script type="text/javascript">
+    $('#DivPager').pagination({
+        onSelectPage: function (pageNumber, pageSize) {
+            $(this).pagination('loading');
+            loadPageData(pageNumber, pageSize);
+            $(this).pagination('loaded');
+        }
+    });
+    $('#DivPager').pagination({
+        onRefresh: function (pageNumber, pageSize) {
+            VerGlobal = Date();
+            $(this).pagination('loading');
+            CurrentRequestDataUrl += "&Ver=" + Date();
+            loadData(CurrentRequestDataUrl);
+            $(this).pagination('loaded');
+        }
+    });
+
+    // 加载数据
+    function loadData(targetUrl) {
+        $.ajax({
+            type: "Get",
+            url: targetUrl + "&VerGlobal=" + VerGlobal,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+                    ////////////////////// 绑定数据Start  ////////////////////
+                    var rows = JsonResult.rows;
+                    if (rows) {
+
+                        $('#dg').datagrid({
+                            data: rows,
+                            rownumbers: true,
+                            columns: [[
+                                       { field: 'ck',checkbox: true },
+                                       
+                                       { field: 'ID', title: '序号' },
+                                       
+                                       { field: 'NodeID', title: '节点标识' },
+                                       
+                                       { field: 'NodeFlag', title: '节点标记' },
+                                       
+                                       { field: 'NodeName', title: '节点名称' },
+                                       
+                                       { field: 'WorkFlowID', title: '所属工作流程标识', formatter: formatWorkFlowName },
+                                       
+                                       { field: 'IsConcurrent', title: '是否并行' },
+                                       
+                                       { field: " ", title: '操作', formatter: formatEdit }
+									   
+                                     ]]
+                        });
+                     } else {
+                             alert("对不起，没数据！");
+                             $('#dg').datagrid({
+                             data: []
+                             });
+                    }
+                    //// -------------------------------------- //////
+
+                    if (JsonResult.total) {
+                        $('#DivPager').pagination({
+                            total: JsonResult.total
+                        });
+                    }
+
+                    //////////////////// 绑定数据End  ///////////////
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                    $('#dg').datagrid({
+                        data: []
+                    });
+					if (JsonResult.ReturnTitle == "Login") {
+                        ToReLogin();
+                    }
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+    function formatEdit(val, row,index) {
+        return "<a href='WF_NodeOperate.htm?id=" + row.ID + "&showbackbtn=true'>编辑</a> <a href='javascript:DeleteByID(" + row.ID + ");' onclick='return confirm(\"真的要删除？\");'>删除</a>";
+    }
+	
+    function formatWorkFlowName(val, row, index) {
+        var tempVal = GetDataKeyName(JsonData_WF_WorkFlow_WorkFlowID, val);
+        if (tempVal == "")
+        {
+            var JsonResult = GetKeyValueJsonDataByDataTable("WF_WorkFlow", "WorkFlowName", "WorkFlowID", true, val);
+            if (JsonResult.IsSuccess && JsonResult.rows.length == 1) {
+                JsonData_WF_WorkFlow_WorkFlowID.push({ "DataKey": JsonResult.rows[0]["DataKey"], "DataValue": JsonResult.rows[0]["DataValue"] });
+            tempVal = GetDataKeyName(JsonData_WF_WorkFlow_WorkFlowID, val);
+           }
+        }
+        return tempVal;
+    }
+    function formatIsEnabled(val, row) {
+        if (val) {
+            return "<font color='green'><b>是</b></font>";
+        } else {
+            return "<font color='gray'>否</font>";
+        }
+    }
+ 
+    // 加载首页数据
+    function loadFirstPage() {
+        var tempurl = BaseUrl + "&selecttypename=firstpage&pagesize=" + $('#DivPager').pagination('options').pageSize + GetCondition(true);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+
+        $('#DivPager').pagination({
+            pageNumber: 1
+        });
+    }
+
+    // 加载指定页数据
+    function loadPageData(pageNumber, pageSize) {
+        var tempurl = BaseUrl + "&selecttypename=gotopage&page=" + pageNumber + "&pagesize=" + pageSize + GetCondition(false);
+        CurrentRequestDataUrl = tempurl;
+        loadData(CurrentRequestDataUrl);
+    }
+    function GetCondition(refresh) {
+        if (refresh) {
+            CurrentCondition = "";
+            
+            if ($('#NodeID_NumberBox').val() != "") {
+                CurrentCondition += "&s_NodeID=" + escape($('#NodeID_NumberBox').val());
+            }
+            
+            if ($('#NodeFlag_Input').val() != "") {
+                CurrentCondition += "&s_NodeFlag=" + escape($('#NodeFlag_Input').val());
+            }
+            
+            if ($('#NodeName_Input').val() != "") {
+                CurrentCondition += "&s_NodeName=" + escape($('#NodeName_Input').val());
+            }
+            
+            if ($('#WorkFlowID_NumberBox').val() != "") {
+                CurrentCondition += "&s_WorkFlowID=" + escape($('#WorkFlowID_NumberBox').val());
+            }
+            
+        }
+        return CurrentCondition;
+    }
+
+    function OpenEditWin(id) {
+
+    }
+    function DeleteByID(id) {
+        var dataStr = "m=DeleteByID&id=" + id + "&ver=" + Date();
+        $.ajax({
+            type: "Get",
+            url: "/DataAccess/WF_NodeTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+
+                    alert(JsonResult.ReturnMessage);
+                    VerGlobal = Date();
+                    loadData(CurrentRequestDataUrl);
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+    }
+	function DeleteByIDs(ids) {
+        if (!confirm("真的要删除？"))
+        {
+            return;
+        }
+        var checkedItems = $('#dg').datagrid('getChecked');
+        var ids="";
+        $.each(checkedItems, function (index, item) {
+            if (index == 0)
+            {
+                ids = item.ID;
+            }
+            else {
+                ids = ids + "," + item.ID;
+            }
+        });
+        var dataStr = "m=DeleteByIDs&ids=" + ids + "&ver=" + Date();
+        $.ajax({
+            type: "Get",
+            url: "/DataAccess/WF_NodeTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+                    // 成功
+
+                    alert(JsonResult.ReturnMessage);
+                    VerGlobal = Date();
+                    loadData(CurrentRequestDataUrl);
+
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+    }
+	// 获取所有已经选择的记录的ID值
+	function GetSelectedIDs() {
+        var checkedItems = $('#dg').datagrid('getChecked');
+        var ids = "";
+        $.each(checkedItems, function (index, item) {
+            if (index == 0) {
+                ids = item.ID;
+            }
+            else {
+                ids = ids + "," + item.ID;
+            }
+        });
+        return ids;
+    }
+    function Search() {
+        VerGlobal = Date();
+        loadFirstPage();
+    }
+
+</script>
+<script type="text/javascript">
+    $(window).load(function () {
+	     loadFirstPage();
+    });
+</script>
+
+

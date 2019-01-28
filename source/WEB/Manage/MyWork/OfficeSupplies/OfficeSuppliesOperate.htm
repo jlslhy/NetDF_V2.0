@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css" />   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css" />   
+<link href="/Styles/css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+<script type="text/javascript" src="/js/JQPrototype.js"></script>
+<script type="text/javascript" src="/Manage/JS/common.js"></script>
+</head>
+<body>
+  <div>
+        <!-- 导航标题 Start -->
+        <div   class="PageTitle"  >
+            综合行政 >> 办公用品 >> 物品维护 >> 添加物品 >> <label id="PageTitleLabel" style=" color:green; font-weight:bold;">添加记录</label>
+        </div>
+		
+        <!-- 导航标题 End -->
+        <div title="表单区">
+          <form id="Form1" name="Form1" action="" >
+            <!-- 隐藏字段域 Start -->
+            <input id="RecordIDHid" type="hidden" value="" />
+            <!-- 隐藏字段域 End -->
+             
+            <div title="body">
+                <table class="formtable" >
+                  <tr>  
+                    <th>物品编号：</th>
+                    <td>
+                    <input id="Code_Input" name="Code_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>物品名称：</th>
+                    <td>
+                    <input id="GoodsName_Input" name="GoodsName_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>物品类别：</th>
+                    <td>
+                    <input id="GoodsCateogory_Input" name="GoodsCateogory_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>规格：</th>
+                    <td>
+                    <input id="Specification_Input" name="Specification_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <th>单位：</th>
+                    <td>
+                    <input id="Unit_Input" name="Unit_Input" type="text"  class="easyui-validatebox" style=""  data-options=""     />
+                    </td>  
+                    <th>参考价格：</th>
+                    <td>
+                    <input id="IndicativePrice_NumberBox"  class="easyui-numberbox" style=""  data-options=""     />
+                    
+                    </td>
+                  </tr>
+                </table>
+            </div>
+          </form>
+        </div>
+        <div title="操作区">
+        <a id="saveBtn" href="javascript:Save();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存</a>  
+        <a id="saveAndClearBtn" href="javascript:SaveDataAndClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"  >保存并清空</a>
+        <a id="clearBtn" href="javascript:ClearForm();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="return confirm('真的要清空？');" >清空</a> 
+        <a id="backBtn" href="javascript:history.back();" class="easyui-linkbutton" data-options="iconCls:'icon-back'"  style="display:none;" >返回</a>
+        </div>
+
+   </div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+    // 检测是否在线
+    CheckUpLoginState();
+    /*************************  控件初始化 Start  ***************************/
+ 
+    if (location.href.indexOf("&showbackbtn=true") > 0 || location.href.indexOf("?showbackbtn=true") > 0) {
+        $("#backBtn").show();
+        $("#saveAndClearBtn").hide();
+    }
+    
+
+	
+    /*************************  控件初始化 End  ***************************/
+	
+</script>
+
+<script type="text/javascript">
+    /************************* 页面初始化与表单的数据绑定 Start ****************************/
+    function LoadDataAndFillForm() {
+
+        var ID = encodeURIComponent($("#RecordIDHid").val());
+        var dataStr = "ID=" + ID;
+        dataStr += "&m=GetJsonDataByID";
+        dataStr += "&Ver=" + new Date().getMilliseconds();
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/OfficeSuppliesTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+
+
+                if (JsonResult.IsSuccess) {
+
+                    // 成功
+                    var data = JsonResult.Data;
+                    if (data.ID == "0") {
+                        data.ID = "";
+                    }
+                    if (data) {
+						
+                        $("#Code_Input").val(data.Code);
+						
+                        $("#GoodsName_Input").val(data.GoodsName);
+						
+                        $("#GoodsCateogory_Input").val(data.GoodsCateogory);
+						
+                        $("#Specification_Input").val(data.Specification);
+						
+                        $("#Unit_Input").val(data.Unit);
+						
+                        $("#IndicativePrice_NumberBox").val(data.IndicativePrice);
+						
+                    } else {
+                        alert("对不起，没数据！");
+                    }
+                } else {
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseText);
+            }
+
+        });
+
+    }
+
+
+	
+    /************************* 页面初始化与表单的数据绑定 End ****************************/  
+</script>
+
+<script type="text/javascript">
+    /******************  数据有效性验证 Start ********************/
+    function Validate() {
+	
+        if (!$('#Code_Input').validatebox("isValid"))
+        {
+           alert("物品编号填写的数据没通过验证。");
+           $('#Code_Input').focus();
+           return false;
+        }
+        if (!$('#GoodsName_Input').validatebox("isValid"))
+        {
+           alert("物品名称填写的数据没通过验证。");
+           $('#GoodsName_Input').focus();
+           return false;
+        }
+        if (!$('#GoodsCateogory_Input').validatebox("isValid"))
+        {
+           alert("物品类别填写的数据没通过验证。");
+           $('#GoodsCateogory_Input').focus();
+           return false;
+        }
+        if (!$('#Specification_Input').validatebox("isValid"))
+        {
+           alert("规格填写的数据没通过验证。");
+           $('#Specification_Input').focus();
+           return false;
+        }
+        if (!$('#Unit_Input').validatebox("isValid"))
+        {
+           alert("单位填写的数据没通过验证。");
+           $('#Unit_Input').focus();
+           return false;
+        }
+        if (!$('#IndicativePrice_NumberBox').numberbox("isValid"))
+        {
+           alert("参考价格填写的数据没通过验证。");
+           $('#IndicativePrice_NumberBox').focus();
+           return false;
+        }
+        return true;
+    }
+
+    /******************  数据有效性验证 End ********************/
+
+
+
+
+    /******************* 保存数据（添加或者修改） Start ******************/
+    function SaveData() {
+
+        if (!Validate()) {
+            return;
+        }
+		var IsOK = false;
+        /***************  获取表单数据信息 Start  ******************/
+
+        var ID = escape($("#RecordIDHid").val()); // 注意：这里统一用ID这个命名
+		
+        var Code = escape($("#Code_Input").val());
+		
+        var GoodsName = escape($("#GoodsName_Input").val());
+		
+        var GoodsCateogory = escape($("#GoodsCateogory_Input").val());
+		
+        var Specification = escape($("#Specification_Input").val());
+		
+        var Unit = escape($("#Unit_Input").val());
+		
+        var IndicativePrice = escape($("#IndicativePrice_NumberBox").val());
+		
+
+        var dataStr = "ID=" + ID;
+		
+        dataStr += "&Code=" + Code;
+ 		
+        dataStr += "&GoodsName=" + GoodsName;
+ 		
+        dataStr += "&GoodsCateogory=" + GoodsCateogory;
+ 		
+        dataStr += "&Specification=" + Specification;
+ 		
+        dataStr += "&Unit=" + Unit;
+ 		
+        dataStr += "&IndicativePrice=" + IndicativePrice;
+ 		
+   
+        /***************  获取表单数据信息 End  ******************/
+		
+        /********************  向服务器端请求 Start  ************************/
+		$.ajaxSettings.async = false;
+        $.ajax({
+            type: "POST",
+            url: "/DataAccess/OfficeSuppliesTBL/OperateData.ashx",
+            data: dataStr,
+            dataType: "json",
+            success: function (JsonResult) {
+                if (JsonResult.IsSuccess) {
+				    IsOK = true;
+                    // 成功
+                    alert(JsonResult.ReturnMessage);
+                } else {
+				    IsOK = false;
+                    // 失败
+                    alert("失败：" + JsonResult.ReturnMessage);
+                }
+
+            }
+        });
+		$.ajaxSettings.async = true;
+        return IsOK;
+        /********************  向服务器端请求 End  ************************/
+
+    }
+
+    /******************* 保存数据（添加或者修改） End ******************/
+
+    // 重置表单数据
+    function ClearForm() {
+        $("#Form1")[0].reset();
+    }
+	function SaveDataAndClearForm()
+    {
+        if (SaveData()) {
+            ClearForm();
+        } else {
+             
+        }
+    }
+	function Save() {
+        if (SaveData()) {
+
+        }
+    }
+</script>
+<script type="text/javascript">
+    $(window).load(function () {
+	  
+      if (UrlHasParam(window.location.href, "id")) {
+        $("#RecordIDHid").val(ReqStr(window.location.href, "id"));
+        $("#PageTitleLabel").html("编辑记录");
+		$.ajaxSettings.async = false;
+        LoadDataAndFillForm();
+		$.ajaxSettings.async = true;
+		
+      }
+      
+      /*************************  默认值 Start  ***************************/
+      if (IsAdd()) {
+        
+      }
+      /*************************  默认值 End  ***************************/
+	  
+    
+
+    });
+	
+</script>

@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/default/easyui.css">   
+<link rel="stylesheet" type="text/css" href="/UIFramkwork/jquery_easyui_1_3_2/themes/icon.css">   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery-1.8.0.min.js"></script>   
+<script type="text/javascript" src="/UIFramkwork/jquery_easyui_1_3_2/jquery.easyui.min.js"></script> 
+</head>
+<body>
+ 
+
+ <div id="pp" class="easyui-pagination" data-options="total:30,pageSize:10" style="background:#efefef;border:1px solid #ccc;"></div> 
+
+ <div id="Div1" style="background:#efefef;border:1px solid #ccc;"></div> 
+
+
+ 
+
+
+
+<script type="text/javascript">
+
+    $('#Div1').pagination({
+        total: 2000,
+        pageSize: 10
+    });
+
+
+    $('#Div1').pagination({
+        pageList: [10, 20, 50, 100],
+        pageNumber:10
+    });
+
+    $('#Div1').pagination({
+        onSelectPage: function (pageNumber, pageSize) {
+            $(this).pagination('loading');
+            alert('pageNumber:' + pageNumber + ',pageSize:' + pageSize);
+            $(this).pagination('loaded');
+        }
+    });
+
+    $('#Div1').pagination({
+        onBeforeRefresh: function (pageNumber, pageSize) {
+
+            alert('刷新前pageNumber:' + pageNumber + ',pageSize:' + pageSize);
+            return true;
+        }
+    });
+
+
+    $('#Div1').pagination({
+        onRefresh: function (pageNumber, pageSize) {
+
+            alert('刷新后pageNumber:' + pageNumber + ',pageSize:' + pageSize);
+            return true;
+        }
+    });
+
+
+    $('#Div1').pagination({
+        onChangePageSize: function ( pageSize) {
+
+            alert( ' pageSize:' + pageSize);
+            return true;
+        }
+    });
+
+
+
+
+</script>
+
+
+</body>
+</html>
